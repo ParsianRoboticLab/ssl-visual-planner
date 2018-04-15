@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/mahi97/ssl-visual-planner.svg?branch=master)](https://travis-ci.org/mahi97/ssl-visual-planner)
+[![Build Status](https://travis-ci.org/ParsianRoboticLab/ssl-visual-planner.svg?branch=master)](https://travis-ci.org/ParsianRoboticLab/ssl-visual-planner)
 
 Visual Planner
 =====
