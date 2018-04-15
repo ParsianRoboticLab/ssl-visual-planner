@@ -36,9 +36,6 @@ playoff::playoff(QWidget *parent) :
     chance   = 1;
     lastDist = 1.5;
 
-    maxEff = 2;
-    minNeed = 2;
-
 }
 
 playoff::~playoff()
@@ -75,24 +72,6 @@ void playoff::setStatusBar(QStatusBar *_statusBar)
 void playoff::setAgentSizeCB(QComboBox *_comboBox)
 {
     agentSizeCB = _comboBox;
-}
-
-void playoff::setMaxEffectiveCB(QComboBox *_maxEffective){
-    maxEffectiveCB = _maxEffective;
-}
-
-void playoff::setMinNeededCB(QComboBox *_minNeeded){
-    minNeededCB = _minNeeded;
-}
-
-void playoff::setLastDistDSB(QDoubleSpinBox *_lastDistDSB)
-{
-    lastDistDSB = _lastDistDSB;
-}
-
-void playoff::setChanceSB(QSpinBox *_chanceSB)
-{
-    chanceSB = _chanceSB;
 }
 
 void playoff::mousePressed(QMouseEvent *event, QPoint tempPos)
@@ -511,7 +490,7 @@ void playoff::mouseMoved(QMouseEvent *event, QPoint tempPos)
 
 void playoff::reset()
 {
-    for (int i = 0; i < _MAX_ROBOT_COUNT; i++) {
+    for (int i = 0; i < 6; i++) {
         robots[i].clear();
     }
     currentRobot.agent = -1;
@@ -524,12 +503,42 @@ void playoff::draw()
     QPixmap tempPix(859, 655);
     tempPix = *fieldPix;
     QPainter painter(&tempPix);
-    for (int i = 0; i < _MAX_ROBOT_COUNT; i++) {
-        if (displayMode == i || displayMode == -1) {
-            drawRobots(painter, i);
-        } else {
-            drawRobots(painter, i, false);
-        }
+
+    if (displayMode == 0 || displayMode == -1) {
+        drawRobots(painter, 0);
+    }
+    else {
+        drawRobots(painter, 0, false);
+    }
+    if (displayMode == 1 || displayMode == -1) {
+        drawRobots(painter, 1);
+    }
+    else {
+        drawRobots(painter, 1, false);
+    }
+    if (displayMode == 2 || displayMode == -1) {
+        drawRobots(painter, 2);
+    }
+    else {
+        drawRobots(painter, 2, false);
+    }
+    if (displayMode == 3 || displayMode == -1) {
+        drawRobots(painter, 3);
+    }
+    else {
+        drawRobots(painter, 3, false);
+    }
+    if (displayMode == 4 || displayMode == -1) {
+        drawRobots(painter, 4);
+    }
+    else {
+        drawRobots(painter, 4, false);
+    }
+    if (displayMode == 5 || displayMode == -1) {
+        drawRobots(painter, 5);
+    }
+    else {
+        drawRobots(painter, 5, false);
     }
     fieldLabel->setPixmap(tempPix);
 }
@@ -590,50 +599,66 @@ void playoff::drawRobots(QPainter &painter, int tRobotIndex, bool selected)
 
     if (tRobotIndex == displayMode || displayMode == -1) {
         tempBPen.setColor(QColor(68, 132, 127));
-        tempPen.setColor(QColor(243, 223, 28));
-
-    } else {
+    }
+    else {
         tempBPen.setColor(QColor(68, 132, 127, 64));
+    }
+
+    if (tRobotIndex == displayMode || displayMode == -1) {
+        tempPen.setColor(QColor(243, 223, 28));
+    }
+    else {
         tempPen.setColor(QColor(243, 223, 28, 64));
-
-    }
-    switch (tRobotIndex) {
-    case 0:
-        tempPen.setColor(QColor(243, 223, 28));
-        break;
-    case 1:
-        tempPen.setColor(QColor(191, 25, 148));
-        break;
-    case 2:
-        tempPen.setColor(QColor(25, 191, 28));
-        break;
-    case 3:
-        tempPen.setColor(QColor(255, 131, 29));
-        break;
-    case 4:
-        tempPen.setColor(QColor(231, 106, 80));
-        break;
-    case 5:
-        tempPen.setColor(QColor(9, 106, 80));
-        break;
-    case 6: // TODO: new color
-        tempPen.setColor(QColor(80, 100, 255));
-        break;
-    case 7: // TODO: new color
-        tempPen.setColor(QColor(40, 40, 40));
-        break;
-    default:
-        tempPen.setColor(QColor(243, 223, 28));
-        break;
     }
 
-    // Transparent when it's not selected
-    if (tRobotIndex != displayMode && displayMode != -1) {
-        QColor temp = tempPen.color();
-        temp.setAlpha(64);
-        tempPen.setColor(temp);
+    if (tRobotIndex == 0) {
+        if (tRobotIndex == displayMode || displayMode == -1) {
+            tempPen.setColor(QColor(243, 223, 28));
+        }
+        else {
+            tempPen.setColor(QColor(243, 223, 28, 64));
+        }
     }
-
+    else if (tRobotIndex == 1) {
+        if (tRobotIndex == displayMode || displayMode == -1) {
+            tempPen.setColor(QColor(191, 25, 34));
+        }
+        else {
+            tempPen.setColor(QColor(191, 25, 34, 64));
+        }
+    }
+    else if (tRobotIndex == 2) {
+        if (tRobotIndex == displayMode || displayMode == -1) {
+            tempPen.setColor(QColor(25, 191, 148));
+        }
+        else {
+            tempPen.setColor(QColor(25, 191, 148, 64));
+        }
+    }
+    else if (tRobotIndex == 3) {
+        if (tRobotIndex == displayMode || displayMode == -1) {
+            tempPen.setColor(QColor(255, 131, 29));
+        }
+        else {
+            tempPen.setColor(QColor(255, 131, 29, 64));
+        }
+    }
+    else if (tRobotIndex == 4) {
+        if (tRobotIndex == displayMode || displayMode == -1) {
+            tempPen.setColor(QColor(231, 106, 80));
+        }
+        else {
+            tempPen.setColor(QColor(231, 106, 80, 64));
+        }
+    }
+    else if (tRobotIndex == 5) {
+        if (tRobotIndex == displayMode || displayMode == -1) {
+            tempPen.setColor(QColor(9, 106, 80));
+        }
+        else {
+            tempPen.setColor(QColor(9, 106, 80, 64));
+        }
+    }
     //    SolidLine,
     //    DashLine,
     //    DotLine,
@@ -662,8 +687,8 @@ void playoff::drawRobots(QPainter &painter, int tRobotIndex, bool selected)
             painter.drawArc(tempCircle, 0, 360*16);
             QLine tempAngle;
             tempAngle.setP1(QPoint(robots[currentRobot.agent].at(currentRobot.index).x, robots[currentRobot.agent].at(currentRobot.index).y));
-            tempAngle.setP2(QPoint(_RobotAngRad*cos( ( robots[currentRobot.agent].at(currentRobot.index).angle/360 )*2*M_PI ) + robots[currentRobot.agent].at(currentRobot.index).x,
-                    _RobotAngRad*sin( ( robots[currentRobot.agent].at(currentRobot.index).angle/360 )*2*M_PI ) + robots[currentRobot.agent].at(currentRobot.index).y));
+            tempAngle.setP2(QPoint(_RobotAngRad*cos( ( robots[currentRobot.agent].at(currentRobot.index).angle/360 )*2*3.1415 ) + robots[currentRobot.agent].at(currentRobot.index).x,
+                    _RobotAngRad*sin( ( robots[currentRobot.agent].at(currentRobot.index).angle/360 )*2*3.1415 ) + robots[currentRobot.agent].at(currentRobot.index).y));
             tempPen.setColor(QColor(209, 26, 28));
             painter.setPen(tempPen);
             painter.drawLine(tempAngle);
@@ -683,7 +708,8 @@ void playoff::drawRobots(QPainter &painter, int tRobotIndex, bool selected)
                 painter.drawArc(tempTol,0,360*16);
             }
         }
-    } else if (showAll) {
+    }
+    else if (showAll) {
         tempPen.setStyle(Qt::SolidLine);
         for (int i = 0; i < robots[tRobotIndex].length(); i++) {
             tempPen.setWidth(2);
@@ -695,8 +721,8 @@ void playoff::drawRobots(QPainter &painter, int tRobotIndex, bool selected)
             painter.drawArc(tempCircle, 0, 360*16);
             QLine tempAngle;
             tempAngle.setP1(QPoint(robots[tRobotIndex].at(i).x, robots[tRobotIndex].at(i).y));
-            tempAngle.setP2(QPoint(_RobotAngRad*cos( ( robots[tRobotIndex].at(i).angle/360 )*2*M_PI ) + robots[tRobotIndex].at(i).x,
-                                   _RobotAngRad*sin( ( robots[tRobotIndex].at(i).angle/360 )*2*M_PI ) + robots[tRobotIndex].at(i).y));
+            tempAngle.setP2(QPoint(_RobotAngRad*cos( ( robots[tRobotIndex].at(i).angle/360 )*2*3.1415 ) + robots[tRobotIndex].at(i).x,
+                                   _RobotAngRad*sin( ( robots[tRobotIndex].at(i).angle/360 )*2*3.1415 ) + robots[tRobotIndex].at(i).y));
             tempPen.setColor(QColor(209, 26, 28));
             painter.setPen(tempPen);
             painter.drawLine(tempAngle);
@@ -732,9 +758,9 @@ void playoff::drawRobots(QPainter &painter, int tRobotIndex, bool selected)
                         tempAng = atan2(tempP2.y() - tempP1.y(),
                                         tempP2.x() - tempP1.x());
                         tempPoly.append(tempP2);
-                        tempPoly.append(QPoint(tempP1.x() + cos(tempAng-M_PI_2)*tempArrowW, tempP1.y() + sin(tempAng-M_PI_2)*tempArrowW));
+                        tempPoly.append(QPoint(tempP1.x() + cos(tempAng-1.5707)*tempArrowW, tempP1.y() + sin(tempAng-1.5707)*tempArrowW));
                         tempPoly.append(QPoint(tempP1.x() + cos(tempAng)*tempArrowW*3, tempP1.y() + sin(tempAng)*tempArrowW*3));
-                        tempPoly.append(QPoint(tempP1.x() + cos(tempAng+M_PI_2)*tempArrowW, tempP1.y() + sin(tempAng+M_PI_2)*tempArrowW));
+                        tempPoly.append(QPoint(tempP1.x() + cos(tempAng+1.5707)*tempArrowW, tempP1.y() + sin(tempAng+1.5707)*tempArrowW));
                         tempPoly.append(tempP2);
                         painter.drawPolygon(tempPoly);
                     }
@@ -758,16 +784,16 @@ void playoff::drawRobots(QPainter &painter, int tRobotIndex, bool selected)
             if (robots[tRobotIndex].at(i).skill[j] == ShotToGoalSkill) {
                 tempP1.setX(robots[tRobotIndex].at(i).x);
                 tempP1.setY(robots[tRobotIndex].at(i).y);
-                tempP2.setX(1148);
-                tempP2.setY(516 - (110*(double(robots[tRobotIndex].at(i).skillData[j][1])/1000)));
+                tempP2.setX(834);
+                tempP2.setY(377 - (100*(double(robots[tRobotIndex].at(i).skillData[j][1])/1000)));
 
                 tempAng = atan2(tempP2.y() - tempP1.y(),
                                 tempP2.x() - tempP1.x());
 
                 tempPoly.append(tempP2);
-                tempPoly.append(QPoint(tempP1.x() + cos(tempAng-M_PI_2)*tempArrowW, tempP1.y() + sin(tempAng-M_PI_2)*tempArrowW));
+                tempPoly.append(QPoint(tempP1.x() + cos(tempAng-1.5707)*tempArrowW, tempP1.y() + sin(tempAng-1.5707)*tempArrowW));
                 tempPoly.append(QPoint(tempP1.x() + cos(tempAng)*tempArrowW*3, tempP1.y() + sin(tempAng)*tempArrowW*3));
-                tempPoly.append(QPoint(tempP1.x() + cos(tempAng+M_PI_2)*tempArrowW, tempP1.y() + sin(tempAng+M_PI_2)*tempArrowW));
+                tempPoly.append(QPoint(tempP1.x() + cos(tempAng+1.5707)*tempArrowW, tempP1.y() + sin(tempAng+1.5707)*tempArrowW));
                 tempPoly.append(tempP2);
                 painter.drawPolygon(tempPoly);
             }
@@ -788,16 +814,16 @@ void playoff::drawRobots(QPainter &painter, int tRobotIndex, bool selected)
             if (robots[tRobotIndex].at(i).skill[j] == ChipToGoalSkill) {
                 tempP1.setX(robots[tRobotIndex].at(i).x);
                 tempP1.setY(robots[tRobotIndex].at(i).y);
-                tempP2.setX(1148);
-                tempP2.setY(516 - (110*(double(robots[tRobotIndex].at(i).skillData[j][1])/1000)));
+                tempP2.setX(834);
+                tempP2.setY(377 - (100*(double(robots[tRobotIndex].at(i).skillData[j][1])/1000)));
 
                 tempAng = atan2(tempP2.y() - tempP1.y(),
                                 tempP2.x() - tempP1.x());
 
                 tempPoly.append(tempP2);
-                tempPoly.append(QPoint(tempP1.x() + cos(tempAng-M_PI_2)*tempArrowW, tempP1.y() + sin(tempAng-M_PI_2)*tempArrowW));
+                tempPoly.append(QPoint(tempP1.x() + cos(tempAng-1.5707)*tempArrowW, tempP1.y() + sin(tempAng-1.5707)*tempArrowW));
                 tempPoly.append(QPoint(tempP1.x() + cos(tempAng)*tempArrowW*3, tempP1.y() + sin(tempAng)*tempArrowW*3));
-                tempPoly.append(QPoint(tempP1.x() + cos(tempAng+M_PI_2)*tempArrowW, tempP1.y() + sin(tempAng+M_PI_2)*tempArrowW));
+                tempPoly.append(QPoint(tempP1.x() + cos(tempAng+1.5707)*tempArrowW, tempP1.y() + sin(tempAng+1.5707)*tempArrowW));
                 tempPoly.append(tempP2);
                 painter.drawPolygon(tempPoly);
             }
@@ -818,16 +844,16 @@ void playoff::drawRobots(QPainter &painter, int tRobotIndex, bool selected)
             if (robots[tRobotIndex].at(i).skill[j] == OneTouchSkill) {
                 tempP1.setX(robots[tRobotIndex].at(i).x);
                 tempP1.setY(robots[tRobotIndex].at(i).y);
-                tempP2.setX(1148);
-                tempP2.setY(516 - (110*(double(robots[tRobotIndex].at(i).skillData[j][1])/1000)));
+                tempP2.setX(834);
+                tempP2.setY(377 - (100*(double(robots[tRobotIndex].at(i).skillData[j][1])/1000)));
 
                 tempAng = atan2(tempP2.y() - tempP1.y(),
                                 tempP2.x() - tempP1.x());
 
                 tempPoly.append(tempP2);
-                tempPoly.append(QPoint(tempP1.x() + cos(tempAng-M_PI_2)*tempArrowW, tempP1.y() + sin(tempAng-M_PI_2)*tempArrowW));
+                tempPoly.append(QPoint(tempP1.x() + cos(tempAng-1.5707)*tempArrowW, tempP1.y() + sin(tempAng-1.5707)*tempArrowW));
                 tempPoly.append(QPoint(tempP1.x() + cos(tempAng)*tempArrowW*3, tempP1.y() + sin(tempAng)*tempArrowW*3));
-                tempPoly.append(QPoint(tempP1.x() + cos(tempAng+M_PI_2)*tempArrowW, tempP1.y() + sin(tempAng+M_PI_2)*tempArrowW));
+                tempPoly.append(QPoint(tempP1.x() + cos(tempAng+1.5707)*tempArrowW, tempP1.y() + sin(tempAng+1.5707)*tempArrowW));
                 tempPoly.append(tempP2);
                 painter.drawPolygon(tempPoly);
             }
@@ -852,14 +878,11 @@ void playoff::placeRobot(QPoint pos, int tAgent, bool tTemp)
     if (pos.x() > fieldLabel->width()-1) {
         pos.setX(fieldLabel->width()-1);
     }
-    if (pos.x() > 1176) {
-        pos.setX(1175);
+    if (pos.y() < 0) {
+        pos.setY(0);
     }
-    if (pos.y() < 50) {
-        pos.setY(50);
-    }
-    if (pos.y() > 891) {
-        pos.setY(891);
+    if (pos.y() > fieldLabel->height()-1) {
+        pos.setY(fieldLabel->height()-1);
     }
     for (int i = 0; i < _MAX_ROBOT_COUNT; i++) {
         for (int j = 0; j < robots[i].length(); j++) {
@@ -874,7 +897,10 @@ void playoff::placeRobot(QPoint pos, int tAgent, bool tTemp)
     //tempRobot.label = "A";
     tempRobot.agent = tAgent;
     tempRobot.angle = 0;
-    tempRobot.angRect = getRobotAngRect(tempRobot);
+    tempRobot.angRect = QRect(QPoint(_RobotAngRad*cos( ( tempRobot.angle/360 )*2*3.1415 ) + tempRobot.x,
+                                     _RobotAngRad*sin( ( tempRobot.angle/360 )*2*3.1415 ) + tempRobot.y)-QPoint(4,4),
+                              QPoint(_RobotAngRad*cos( ( tempRobot.angle/360 )*2*3.1415 ) + tempRobot.x,
+                                     _RobotAngRad*sin( ( tempRobot.angle/360 )*2*3.1415 ) + tempRobot.y)+QPoint(4,4));
     tempRobot.temp = tTemp;
     tempRobot.tolerance = 30;
     tempRobot.skillSize = 1;
@@ -896,23 +922,26 @@ void playoff::placeRobot(QPoint pos, int tAgent, bool tTemp)
 
 void playoff::moveRobot(QPoint pos, int tAgent, int tIndex, bool tTemp)
 {
-    if (pos.x() < 50) {
-        pos.setX(50);
+    if (pos.x() < 0) {
+        pos.setX(0);
     }
-    if (pos.x() > 1176) {
-        pos.setX(1175);
+    if (pos.x() > fieldLabel->width()-1) {
+        pos.setX(fieldLabel->width()-1);
     }
-    if (pos.y() < 50) {
-        pos.setY(50);
+    if (pos.y() < 0) {
+        pos.setY(0);
     }
-    if (pos.y() > 891) {
-        pos.setY(891);
+    if (pos.y() > fieldLabel->height()-1) {
+        pos.setY(fieldLabel->height()-1);
     }
     PlayOffRobot tempRobot;
     tempRobot = robots[tAgent].at(tIndex);
     tempRobot.x = pos.x();
     tempRobot.y = pos.y();
-    tempRobot.angRect = getRobotAngRect(tempRobot);
+    tempRobot.angRect = QRect(QPoint(_RobotAngRad*cos( ( tempRobot.angle/360 )*2*3.1415 ) + tempRobot.x,
+                                     _RobotAngRad*sin( ( tempRobot.angle/360 )*2*3.1415 ) + tempRobot.y)-QPoint(4,4),
+                              QPoint(_RobotAngRad*cos( ( tempRobot.angle/360 )*2*3.1415 ) + tempRobot.x,
+                                     _RobotAngRad*sin( ( tempRobot.angle/360 )*2*3.1415 ) + tempRobot.y)+QPoint(4,4));
     tempRobot.temp = tTemp;
     robots[tAgent].replace(tIndex, tempRobot);
 
@@ -936,8 +965,11 @@ void playoff::turnRobotAng(QPoint pos, int tAgent, int tIndex)
     PlayOffRobot tempRobot;
     tempRobot = robots[tAgent].at(tIndex);
     double tempAng = atan2(pos.y() - tempRobot.y, pos.x() - tempRobot.x);
-    tempRobot.angle = tempAng*(360/(2*M_PI));
-    tempRobot.angRect = getRobotAngRect(tempRobot);
+    tempRobot.angle = tempAng*(360/(2*3.1415));
+    tempRobot.angRect = QRect(QPoint(_RobotAngRad*cos( ( tempRobot.angle/360 )*2*3.1415 ) + tempRobot.x,
+                                     _RobotAngRad*sin( ( tempRobot.angle/360 )*2*3.1415 ) + tempRobot.y)-QPoint(4,4),
+                              QPoint(_RobotAngRad*cos( ( tempRobot.angle/360 )*2*3.1415 ) + tempRobot.x,
+                                     _RobotAngRad*sin( ( tempRobot.angle/360 )*2*3.1415 ) + tempRobot.y)+QPoint(4,4));
     robots[tAgent].replace(tIndex, tempRobot);
     draw();
 }
@@ -962,13 +994,18 @@ void playoff::removeSelectedRobots(QList<AgentAndIndex> &tList)
 
 bool playoff::containPoint(QPoint point, QPoint pos, int r)
 {
-    return sqrt( (pos.x() - point.x())*(pos.x() - point.x()) + (pos.y() - point.y())*(pos.y() - point.y()) ) <= r;
+    if (sqrt( (pos.x() - point.x())*(pos.x() - point.x()) + (pos.y() - point.y())*(pos.y() - point.y()) ) <= r) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 RobotAttr playoff::getRobot(QPoint pos, bool passExp, QPoint *_base)
 {
     RobotAttr tempRobot;
-    for (int i = 0; i < _MAX_ROBOT_COUNT; i++) {
+    for (int i = 0; i < 6; i++) {
         if (i == displayMode || displayMode == -1) {
             for (int j = 0; j < robots[i].length(); j++) {
                 if(containPoint(pos, QPoint(robots[i].at(j).x, robots[i].at(j).y), 9)) {
@@ -1025,8 +1062,8 @@ void playoff::setDisplayMode(int tMode, bool noDraw)
     if (tMode < -1) {
         tMode = -1;
     }
-    if (tMode > _MAX_ROBOT_COUNT - 1 ) {
-        tMode = _MAX_ROBOT_COUNT - 1;
+    if (tMode > 5 ) {
+        tMode = 5;
     }
     displayMode = tMode;
     if (!noDraw) {
@@ -1044,8 +1081,8 @@ void playoff::setCurrentAgent(int tAgent)
     if (tAgent < 0) {
         tAgent = 0;
     }
-    if (tAgent > _MAX_ROBOT_COUNT - 1) {
-        tAgent = _MAX_ROBOT_COUNT - 1;
+    if (tAgent > 5) {
+        tAgent = 5;
     }
     currentAgent = tAgent;
 }
@@ -1060,8 +1097,8 @@ void playoff::setAgentSize(int tSize)
     if (tSize < 1) {
         tSize = 1;
     }
-    if (tSize > _MAX_ROBOT_COUNT) {
-        tSize = _MAX_ROBOT_COUNT;
+    if (tSize > 6) {
+        tSize = 6;
     }
     agentSize = tSize;
 }
@@ -1082,8 +1119,8 @@ RobotGeometry playoff::getRobotGeom(int tAgent, int tIndex)
     if (tAgent < 0) {
         tAgent = 0;
     }
-    if (tAgent > _MAX_ROBOT_COUNT - 1) {
-        tAgent = _MAX_ROBOT_COUNT - 1;
+    if (tAgent > 5) {
+        tAgent = 5;
     }
     if (tIndex < 0) {
         tIndex = 0;
@@ -1103,8 +1140,8 @@ int playoff::getRobotSize(int tAgent)
     if (tAgent < 0) {
         tAgent = 0;
     }
-    if (tAgent > _MAX_ROBOT_COUNT - 1) {
-        tAgent = _MAX_ROBOT_COUNT - 1;
+    if (tAgent > 5) {
+        tAgent = 5;
     }
     return robots[tAgent].length();
 }
@@ -1130,7 +1167,10 @@ void playoff::setGeomAngle(double tAng)
     PlayOffRobot tempRobot;
     tempRobot = robots[currentRobot.agent].at(currentRobot.index);
     tempRobot.angle = tAng;
-    tempRobot.angRect = getRobotAngRect(tempRobot);
+    tempRobot.angRect = QRect(QPoint(_RobotAngRad*cos( ( tempRobot.angle/360 )*2*3.1415 ) + tempRobot.x,
+                                     _RobotAngRad*sin( ( tempRobot.angle/360 )*2*3.1415 ) + tempRobot.y)-QPoint(4,4),
+                              QPoint(_RobotAngRad*cos( ( tempRobot.angle/360 )*2*3.1415 ) + tempRobot.x,
+                                     _RobotAngRad*sin( ( tempRobot.angle/360 )*2*3.1415 ) + tempRobot.y)+QPoint(4,4));
     robots[currentRobot.agent].replace(currentRobot.index, tempRobot);
     draw();
 }
@@ -1252,19 +1292,19 @@ PlayOffSkills playoff::getSkill(int tSkillNum)
 void playoff::POinitLables()
 {
     int frameHeight = POWidget->height(), frameWidth = POWidget->width();
-    const int vMargin = 5, hMargin = 10, yStart = 90, boxHeight = 50, boxWidth = 70;
-    for (int i = 0; i < _MAX_ROBOT_COUNT + 2; i++) {
+    const int vMargin = 5, hMargin = 10, yStart = 90, boxHeight = 50;
+    for (int i = 0; i < 8; i++) {
         PODisplayModeLabel[i] = new QLabel(POWidget);
         PODisplayModeLabel[i]->setAlignment(Qt::AlignCenter|Qt::AlignHCenter);
         PODisplayModeLabel[i]->setCursor(Qt::PointingHandCursor);
         if (i == 0) {
             PODisplayModeLabel[i]->setCursor(Qt::ArrowCursor);
-            PODisplayModeLabel[i]->setGeometry(QRect(hMargin, vMargin + yStart, boxWidth, boxHeight));
+            PODisplayModeLabel[i]->setGeometry(QRect(hMargin, vMargin + yStart, 70, boxHeight));
             PODisplayModeLabel[i]->setStyleSheet("QLabel { background-color : #ea8c00; color : white; font-weight: bold;}");
             PODisplayModeLabel[i]->setText("Display\nMode");
         }
         else {
-            PODisplayModeLabel[i]->setGeometry(QRect(hMargin + ((frameWidth-(hMargin*2 + 70) )/(_MAX_ROBOT_COUNT+1))*(i-1) + 70, vMargin + yStart, (frameWidth-(hMargin*2+70))/(_MAX_ROBOT_COUNT+1), 50));
+            PODisplayModeLabel[i]->setGeometry(QRect(hMargin + ((frameWidth-(hMargin*2 + 70) )/7)*(i-1) + 70, vMargin + yStart, (frameWidth-(hMargin*2+70))/7, 50));
             PODisplayModeLabel[i]->setStyleSheet("QLabel { background-color : #89a1b5; color : white; font-weight: bold;} QLabel:HOVER { background-color : #2f78b3; }");
             if (i == 1) {
                 PODisplayModeLabel[i]->setText("All");
@@ -1275,7 +1315,7 @@ void playoff::POinitLables()
         }
     }
 
-    for (int i = 0; i < _MAX_ROBOT_COUNT + 1; i++) {
+    for (int i = 0; i < 7; i++) {
         POCurrentAgentLabel[i] = new QLabel(POWidget);
         POCurrentAgentLabel[i]->setAlignment(Qt::AlignCenter|Qt::AlignHCenter);
         POCurrentAgentLabel[i]->setCursor(Qt::PointingHandCursor);
@@ -1286,7 +1326,7 @@ void playoff::POinitLables()
             POCurrentAgentLabel[i]->setText("Current\nAgent");
         }
         else {
-            POCurrentAgentLabel[i]->setGeometry(QRect(hMargin + ((frameWidth-(hMargin*2 + 70) )/_MAX_ROBOT_COUNT)*(i-1) + 70, vMargin*2 + yStart + boxHeight , (frameWidth-(hMargin*2+70))/_MAX_ROBOT_COUNT, 50));
+            POCurrentAgentLabel[i]->setGeometry(QRect(hMargin + ((frameWidth-(hMargin*2 + 70) )/6)*(i-1) + 70, vMargin*2 + yStart + boxHeight , (frameWidth-(hMargin*2+70))/6, 50));
             POCurrentAgentLabel[i]->setStyleSheet("QLabel { background-color : #89a1b5; color : white; font-weight: bold;} QLabel:HOVER { background-color : #2f78b3; }");
             POCurrentAgentLabel[i]->setText(QString::number(i));
         }
@@ -1303,7 +1343,7 @@ void playoff::POinitLables()
         for(int j = 0; j < 2; j++) {
             POTiming[i*2 + j] = new QLineEdit(POWidget);
             POTiming[i*2 + j]->setGeometry(QRect(hMargin*2 + (85+hMargin)*j + 20 + frameWidth/2, (vMargin + 50)*i + 245 + vMargin*2, 45, 50 - vMargin*4));
-            POTiming[i*2 + j]->setText("500");
+            POTiming[i*2 + j]->setText("1000");
             POTiming[i*2 + j]->setVisible(false);
 
             POTimingLable[i*2 + j] = new QLabel(POWidget);
@@ -1340,12 +1380,12 @@ void playoff::POinitLables()
 
     POPaintSkill();
 
-   connect(POTiming[0],SIGNAL(textEdited(QString)),this,SLOT(POLineEdit0_0()));
-   connect(POTiming[1],SIGNAL(textEdited(QString)),this,SLOT(POLineEdit0_1()));
-   connect(POTiming[2],SIGNAL(textEdited(QString)),this,SLOT(POLineEdit1_0()));
-   connect(POTiming[3],SIGNAL(textEdited(QString)),this,SLOT(POLineEdit1_1()));
-   connect(POTiming[4],SIGNAL(textEdited(QString)),this,SLOT(POLineEdit2_0()));
-   connect(POTiming[5],SIGNAL(textEdited(QString)),this,SLOT(POLineEdit2_1()));
+    connect(POTiming[0],SIGNAL(textEdited(QString)),this,SLOT(POLineEdit0_0()));
+    connect(POTiming[1],SIGNAL(textEdited(QString)),this,SLOT(POLineEdit0_1()));
+    connect(POTiming[2],SIGNAL(textEdited(QString)),this,SLOT(POLineEdit1_0()));
+    connect(POTiming[3],SIGNAL(textEdited(QString)),this,SLOT(POLineEdit1_1()));
+    connect(POTiming[4],SIGNAL(textEdited(QString)),this,SLOT(POLineEdit2_0()));
+    connect(POTiming[5],SIGNAL(textEdited(QString)),this,SLOT(POLineEdit2_1()));
 
     // tools
     int toolVOffset = 500;
@@ -1416,16 +1456,6 @@ void playoff::POinitLables()
     //POMode
 }
 
-QRect playoff::getRobotAngRect(const PlayOffRobot& _robot) {
-    const int& x = _robot.x;
-    const int& y = _robot.y;
-    const double ang = _robot.angle;
-    return QRect(QPoint(_RobotAngRad*cos( ( ang/360 )*2*M_PI ) + x,
-                        _RobotAngRad*sin( ( ang/360 )*2*M_PI ) + y)-QPoint(4,4),
-                 QPoint(_RobotAngRad*cos( ( ang/360 )*2*M_PI ) + x,
-                        _RobotAngRad*sin( ( ang/360 )*2*M_PI ) + y)+QPoint(4,4));
-}
-
 void playoff::POSetSelectedDisplayLabel(int index)
 {
     for (int i = 1; i < getAgentSize()+2; i++) {
@@ -1436,7 +1466,7 @@ void playoff::POSetSelectedDisplayLabel(int index)
             PODisplayModeLabel[i]->setStyleSheet("QLabel { background-color : #89a1b5; color : white; font-weight: bold;} QLabel:HOVER { background-color : #2f78b3; }");
         }
     }
-    for (int i = getAgentSize()+2; i < _MAX_ROBOT_COUNT + 2; i++) {
+    for (int i = getAgentSize()+2; i < 8; i++) {
         PODisplayModeLabel[i]->setStyleSheet("QLabel { background-color : #bbb; color : #ccc; font-weight: bold;}");
     }
 }
@@ -1451,7 +1481,7 @@ void playoff::POSetSelectedCurrentAgentLabel(int index)
             POCurrentAgentLabel[i]->setStyleSheet("QLabel { background-color : #89a1b5; color : white; font-weight: bold;} QLabel:HOVER { background-color : #2f78b3; }");
         }
     }
-    for (int i = getAgentSize()+1; i < _MAX_ROBOT_COUNT + 1; i++) {
+    for (int i = getAgentSize()+1; i < 7; i++) {
         POCurrentAgentLabel[i]->setStyleSheet("QLabel { background-color : #bbb; color : #ccc; font-weight: bold;}");
     }
 }
@@ -1524,7 +1554,8 @@ void playoff::POSetCheckedIA()
 
 void playoff::POOpenSkill(int index, bool temp)
 {
-    int frameHeight = POWidget->height(), frameWidth = POWidget->width();
+    int frameHeight = POWidget->height(),
+            frameWidth = POWidget->width();
 
     if(temp) {
         setCurrentSkillSize(index);
@@ -1598,13 +1629,13 @@ void playoff::POOpenSkill(int index, bool temp)
         case Mark:
         case Support:
         case Position:
-            //            POTiming[i*2]->setText("0");
-            //            POTiming[i*2]->setVisible(true);
-            //            POTimingLable[i*2]->setVisible(true);
-            //            POTimingLable[i*2]->setText("Duration\n(ms)");
-            //            POPassTarget[i]->setVisible(false);
-            //            POReceiveIA[i]->setVisible(false);
-            //            break;
+//            POTiming[i*2]->setText("0");
+//            POTiming[i*2]->setVisible(true);
+//            POTimingLable[i*2]->setVisible(true);
+//            POTimingLable[i*2]->setText("Duration\n(ms)");
+//            POPassTarget[i]->setVisible(false);
+//            POReceiveIA[i]->setVisible(false);
+//            break;
         case NoSkill:
             POTiming[i*2]->setVisible(false);
             POTimingLable[i*2]->setVisible(false);
@@ -1761,7 +1792,7 @@ QList<AgentAndIndex> playoff::getSelectedAgents(int filter)
     AgentAndIndex tempAAI;
 
 
-    for (int i = 0; i < _MAX_ROBOT_COUNT; i++) {
+    for (int i = 0; i < 6; i++) {
         if (filter == i || filter == -1) {
             for (int j = 0; j < robots[i].length(); j++) {
                 if ( tempRect.contains(QPoint(robots[i].at(j).x, robots[i].at(j).y)) ) {
@@ -1787,7 +1818,7 @@ void playoff::fillFirstPointsList(QList<AgentAndIndex> &tList)
 
 void playoff::POCopy(int filter)
 {
-    for (int i = 0; i < _MAX_ROBOT_COUNT; i++) {
+    for (int i = 0; i < 6; i++) {
         copyRobotList[i].clear();
     }
 
@@ -1795,7 +1826,7 @@ void playoff::POCopy(int filter)
     QRect tempRect(PORubberBand->geometry().topLeft() - tempOffset,
                    PORubberBand->geometry().bottomRight() - tempOffset);
 
-    for (int i = 0; i < _MAX_ROBOT_COUNT; i++) {
+    for (int i = 0; i < 6; i++) {
         if (filter == i || filter == -1) {
             for (int j = 0; j < robots[i].length(); j++) {
                 if ( tempRect.contains(QPoint(robots[i].at(j).x, robots[i].at(j).y)) ) {
@@ -1808,13 +1839,22 @@ void playoff::POCopy(int filter)
 
 void playoff::POPaste()
 {
-    for (int i = _MAX_ROBOT_COUNT - 1; i > 0; i++) {
-        if (!copyRobotList[i].isEmpty() && agentSizeCB->currentIndex() < i) {
-            agentSizeCB->setCurrentIndex(i);
-            break;
-        }
+    if (!copyRobotList[5].isEmpty()) {
+        agentSizeCB->setCurrentIndex(5);
     }
-    for (int i = 0; i < _MAX_ROBOT_COUNT; i++) {
+    else if (!copyRobotList[4].isEmpty() && agentSizeCB->currentIndex() < 4) {
+        agentSizeCB->setCurrentIndex(4);
+    }
+    else if (!copyRobotList[3].isEmpty() && agentSizeCB->currentIndex() < 3) {
+        agentSizeCB->setCurrentIndex(3);
+    }
+    else if (!copyRobotList[2].isEmpty() && agentSizeCB->currentIndex() < 2) {
+        agentSizeCB->setCurrentIndex(2);
+    }
+    else if (!copyRobotList[1].isEmpty() && agentSizeCB->currentIndex() < 1) {
+        agentSizeCB->setCurrentIndex(1);
+    }
+    for (int i = 0; i < 6; i++) {
         for (int j = 0; j < copyRobotList[i].length(); j++) {
             robots[i].append(copyRobotList[i].at(j));
         }
@@ -1827,19 +1867,19 @@ POInitPos playoff::getInitPos()
     POInitPos tempInitPos;
     PlayOffSkills tempSkill;
     tempInitPos.ballX = tempInitPos.ballY = -100;
-    for (int i = 0; i < _MAX_ROBOT_COUNT; i++) {
+    for (int i = 0; i < 6; i++) {
         tempInitPos.AgentX[i] = tempInitPos.AgentY[i] = -100;
     }
-    TimeAndIndex temp[_MAX_ROBOT_COUNT];
-    for(auto& t : temp) {
-        t.index = -1;
-        t.agent = -1;
-        t.time = 0;
+    TimeAndIndex temp[6];
+    for (int i = 0; i < 6; i++) {
+        temp[i].index = -1;
+        temp[i].agent = -1;
+        temp[i].time = 0;
     }
     bool flag = false;
     bool flagHasPass = false;
 
-    for (int i = 0; i < _MAX_ROBOT_COUNT; i++) {
+    for (int i = 0; i < 6; i++) {
         for (int j = 0; j < robots[i].length(); j++) {
             for (int k = 0; k < robots[i].at(j).skillSize; k++) {
                 if (robots[i].at(j).skill[k] == PassSkill) {
@@ -1851,7 +1891,7 @@ POInitPos playoff::getInitPos()
     }
 
     if (flagHasPass) {
-        for (int i = 0; i < _MAX_ROBOT_COUNT; i++) {
+        for (int i = 0; i < 6; i++) {
             flag = false;
             tempSkill = NoSkill;
             for (int j = 0; j < robots[i].length(); j++) {
@@ -1876,8 +1916,9 @@ POInitPos playoff::getInitPos()
                 }
             }
         }
-    } else {
-        for (int i = 0; i < _MAX_ROBOT_COUNT; i++) {
+    }
+    else {
+        for (int i = 0; i < 6; i++) {
             flag = false;
             tempSkill = NoSkill;
             for (int j = 0; j < robots[i].length(); j++) {
@@ -1905,8 +1946,8 @@ POInitPos playoff::getInitPos()
         }
     }
     TimeAndIndex tempTaI;
-    for (int i = 0; i < _MAX_ROBOT_COUNT; i++) {
-        for (int j = i; j < _MAX_ROBOT_COUNT; j++) {
+    for (int i = 0; i < 6; i++) {
+        for (int j = i; j < 6; j++) {
             if (temp[i].time > temp[j].time) {
                 tempTaI = temp[j];
                 temp[j] = temp[i];
@@ -1915,7 +1956,7 @@ POInitPos playoff::getInitPos()
         }
     }
     int selectedIndex = -1;
-    for (int i = 0; i < _MAX_ROBOT_COUNT; i++) {
+    for (int i = 0; i < 6; i++) {
         if (temp[i].agent != -1) {
             selectedIndex = i;
             break;
@@ -2015,7 +2056,7 @@ void playoff::apply(int _id)
 {
     POInitPos tempInit;
     tempInit = getInitPos();
-    myPlan->addPlan(robots, tempInit, currentPOMode, tags, agentSize, _id, chance, lastDist, maxEff, minNeed);
+    myPlan->addPlan(robots, tempInit, currentPOMode, tags, agentSize, _id, chance, lastDist);
 }
 
 void playoff::savePlan(QString directory)
@@ -2026,8 +2067,7 @@ void playoff::savePlan(QString directory)
     for (int i = 0; i < myPlan->getPlanSize(); i++) {
         myPlan->insertPlanToQList(robots, tempMData, i);
         tempInit = getInitPos();
-        myPlan->addPlan(robots, tempInit, tempMData.planMode, tempMData.tags, tempMData.agentSize, i, tempMData.chance,
-                        tempMData.lastDist, tempMData.maxEffective, tempMData.minNeeded);
+        myPlan->addPlan(robots, tempInit, tempMData.planMode, tempMData.tags, tempMData.agentSize, i, tempMData.chance, tempMData.lastDist);
     }
     myPlan->changeSQLDir(directory);
     myPlan->savePlan();
@@ -2070,10 +2110,6 @@ void playoff::choosePlan(int index)
         currentPOMode = tempMData.planMode;
         //setAgentSize(tempMData.agentSize);
         agentSizeCB->setCurrentIndex(tempMData.agentSize-1);
-        maxEffectiveCB->setCurrentIndex(tempMData.maxEffective - 2);
-        minNeededCB->setCurrentIndex(tempMData.minNeeded - 2);
-        lastDistDSB->setValue(tempMData.lastDist);
-        chanceSB->setValue(tempMData.chance);
         setDisplayMode(-1, true);
 
         passFlag = false;
@@ -2092,7 +2128,7 @@ void playoff::backupP()
 {
     unsavedMPlan.agentSize = agentSize;
     unsavedMPlan.planMode = currentPOMode;
-    for (int i = 0; i < _MAX_ROBOT_COUNT; i++) {
+    for (int i = 0; i < 6; i++) {
         unsavedPlan[i].clear();
         for (int j = 0; j < robots[i].count(); j++) {
             unsavedPlan[i].append(robots[i].at(j));
@@ -2102,7 +2138,7 @@ void playoff::backupP()
 
 void playoff::restoreP()
 {
-    for (int i = 0; i < _MAX_ROBOT_COUNT; i++) {
+    for (int i = 0; i < 6; i++) {
         robots[i].clear();
         for (int j = 0; j < unsavedPlan[i].count(); j++) {
             robots[i].append(unsavedPlan[i].at(j));
@@ -2142,7 +2178,7 @@ void playoff::clean()
     currentRobot.index = -1;
     currentRobot.skillNum = 0;
     currentAgent = 0;
-    for (int i = 0; i < _MAX_ROBOT_COUNT; i++) {
+    for (int i = 0; i < 6; i++) {
         robots[i].clear();
     }
     draw();
@@ -2180,8 +2216,7 @@ bool playoff::savePlanJson(QString directory)
     for (int i = 0; i < myPlan->getPlanSize(); i++) {
         myPlan->insertPlanToQList(robots, tempMData, i);
         tempInit = getInitPos();
-        myPlan->addPlan(robots, tempInit, tempMData.planMode, tempMData.tags, tempMData.agentSize, i,
-                        tempMData.chance, tempMData.lastDist, tempMData.maxEffective, tempMData.minNeeded);
+        myPlan->addPlan(robots, tempInit, tempMData.planMode, tempMData.tags, tempMData.agentSize, i, tempMData.chance, tempMData.lastDist);
     }
     myPlan->changeSQLDir(directory);
 
@@ -2268,8 +2303,6 @@ void playoff::writePlanJSON(QJsonObject &json, int index ) const
 
     json["chance"]   = static_cast<int>(myPlan->planList[index].chance);
     json["lastDist"] = myPlan->planList[index].lastDist;
-    json["maxEffective"] = myPlan->planList[index].maxEffective;
-    json["minNeeded"] = myPlan->planList[index].minNeeded;
 
 }
 
@@ -2438,7 +2471,7 @@ void playoff::readJSON(const QJsonObject &playBook)
             planTEMP.initPos.AgentY[i] = agentPos.y;
         }
 
-        for(int i = planTEMP.agentSize; i < _MAX_ROBOT_COUNT; i++) {
+        for(int i = planTEMP.agentSize; i < 6; i++) {
             planTEMP.initPos.AgentX[i] = -100;
             planTEMP.initPos.AgentY[i] = -100;
         }
@@ -2486,8 +2519,8 @@ void playoff::readJSON(const QJsonObject &playBook)
                 }
                 for(int i = posTEMP.skillSize; i < 3 ; i++) {
                     posTEMP.skill[i] = NoSkill;
-                    posTEMP.skillData[i][0] = 500;
-                    posTEMP.skillData[i][1] = 500;
+                    posTEMP.skillData[i][0] = 1000;
+                    posTEMP.skillData[i][1] = 1000;
                     posTEMP.IAMode[i] = false;
                 }
                 planTEMP.AgentPlan[counter].append(posTEMP);
@@ -2495,10 +2528,8 @@ void playoff::readJSON(const QJsonObject &playBook)
             counter++;
         }
 
-        planTEMP.chance       = plan["chance"].toInt();
-        planTEMP.lastDist     = plan["lastDist"].toDouble();
-        planTEMP.minNeeded    = plan["minNeeded"].toInt();
-        planTEMP.maxEffective = plan["maxEffective"].toInt();
+        planTEMP.chance   = plan["chance"].toInt();
+        planTEMP.lastDist = plan["lastDist"].toDouble();
         myPlan->planList.append(planTEMP);
     }
 }
@@ -2536,7 +2567,12 @@ Vector2I playoff::convertPosInverse(Vector2D _input) const
     return Vector2I(tempX, tempY);
 }
 
-void playoff::writeproto(PlanBook* pb,int index)
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////we added this
+void playoff::writeproto(PlanBook* pb,int index)/*, const PlayOffRobot& _index, const QList<PlayOffRobot> & __index*/
 {
 
     PlayOffRobot _index{};
@@ -2649,3 +2685,138 @@ void playoff::writeproto(PlanBook* pb,int index)
     //::BALLINITPOS::
 
 }
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////we added this
+//void playoff::writeproto(PlanBook* pb,int index/*, const PlayOffRobot& _index, const QList<PlayOffRobot> & __index*/)
+//{
+
+//    PlayOffRobot _index{};
+//    QList<PlayOffRobot> __index{};
+//   //::PLAN::
+//   Plans* plan = pb->add_plans();
+//   AgentInitPos* aip = NULL;
+//   Agents* agent = plan->add_agents();
+//   Tags* tag = NULL;
+//   plan->set_chance(static_cast<int>(myPlan->planList[index].chance));
+//   plan->set_lastdist(myPlan->planList[index].lastDist);
+//   switch (myPlan->planList[index].planMode)
+//   {
+//   case KICKOFF:
+//       plan->set_planmode("KICKOFF");
+//       break;
+//   case DIRECT:
+//       plan->set_planmode("DIRECT");
+//       break;
+//   case INDIRECT:
+//       plan->set_planmode("INDIRECT");
+//       break;
+//   }
+
+
+//   //::AGENTINITPOS::
+//   for(int i = 0; i < myPlan->planList[index].agentSize; i++)
+//   {
+//       aip = plan->add_agentinitpos();
+//       Vector2D agentPos = convertPos(Vector2I(myPlan->planList[index].initPos.AgentX[i],
+//                                              myPlan->planList[index].initPos.AgentY[i]));
+//       aip->set_x(agentPos.x);
+//       aip->set_y(agentPos.y);
+
+//   }
+//   //::AGENT::
+//   Positions* pos = NULL;
+//   Skill* skill = NULL;
+//   Target* target = NULL;
+////   myPlan->planList[index].AgentPlan[i]
+
+////   Q_FOREACH(auto i, __index)
+////   {
+//   for(int k{};k < myPlan->planList[index].agentSize;k++)
+//       for(int j{};j< myPlan->planList[index].AgentPlan[k].size();j++)
+//       {
+//           PlayOffRobot i = myPlan->planList[index].AgentPlan[k][j];
+
+//       pos = agent->add_p();
+//       Vector2D _pos = convertPos(Vector2I(i.x, i.y));
+
+//       pos->set_pos_x(_pos.x);
+//       pos->set_pos_y(_pos.y);
+//       pos->set_angle(i.angle);
+//       pos->set_tolerance(i.tolerance);
+//       pos->add_skills();
+//       skill = pos->add_skills();
+//       for(int l = 0; l < _index.skillSize ; l++)
+//       {
+//           switch (i.skill[l]) {
+//           case NoSkill:
+//               skill->set_name("NoSkill");
+//               break;
+//           case PassSkill:
+//           {
+//               skill->set_name("PassSkill");
+//               target = skill->mutable_target();
+//               target->set_index(i.target.index);
+//               target->set_agent(i.target.agent);
+//           }
+//               break;
+//           case ReceivePassSkill:
+//               skill->set_name("ReceivePassSkill");
+//               break;
+//           case ShotToGoalSkill:
+//               skill->set_name("ShotToGoalSkill");
+//               break;
+//           case ChipToGoalSkill:
+//               skill->set_name("ChipToGoalSkill");
+//               break;
+//           case OneTouchSkill:
+//               skill->set_name("OneTouchSkill");
+//               break;
+//           case MoveSkill:
+//               skill->set_name("MoveSkill");
+//               break;
+//           case ReceivePassIASkill:
+//               skill->set_name("ReceivePassIASkill");
+//               break;
+
+//           }
+//           skill->set_primary(i.skillData[l][0]);
+//           skill->set_secondry(i.skillData[l][1]);
+//           skill->set_flag(i.IAMode[l]);
+//       }
+
+//   }
+//   //agent->set_id();
+//   //::BALLINITPOS::
+//   BallInitPos* bip = plan->mutable_bip();
+//   Vector2D BallPos = convertPos(Vector2I(myPlan->planList[index].initPos.ballX,
+//                                          myPlan->planList[index].initPos.ballY));
+//   bip->set_x(BallPos.x);
+//   bip->set_y(BallPos.y);
+
+//   //::TAGS::
+//   QStringList tagList = myPlan->planList[index].tags.split("|");
+//   Q_FOREACH(QString tTag, tagList){
+//       tag = plan->add_tags();
+//       tag->set_s(tTag.toStdString());
+//   }
+
+
+
+
+//}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

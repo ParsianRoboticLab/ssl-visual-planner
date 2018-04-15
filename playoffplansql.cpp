@@ -48,11 +48,10 @@ void playOffPlanSQL::savePlan()
     }
     squery.exec("CREATE TABLE poplanlist (id int PRIMARY KEY, pname varchar(16), pmode int,"\
                 " psize int, pball varchar(16), pagent1 varchar(16), pagent2 varchar(16),"\
-                " pagent3 varchar(16), pagent4 varchar(16), pagent5 varchar(16), pagent6 varchar(16),"\
-                " tags varchar(1024))");
+                " pagent3 varchar(16), pagent4 varchar(16), pagent5 varchar(16), pagent6 varchar(16), tags varchar(1024) )");
     QString tempTableName = "";
     QString tempTableStruct = " (id int PRIMARY KEY ";
-    for (int i = 1; i < 6; i++) {
+    for (int i = 1; i < 7; i++) {
         QString tids = QString::number(i);
         tempTableStruct += " , r"+tids+"geo varchar(24), r"+tids+"tol varchar(8), r"+tids+"ssize varchar(8), ";
         tempTableStruct += " r"+tids+"skill1 varchar(24) , r"+tids+"skill2 varchar(24) , r"+tids+"skill3 varchar(24) ,  r"+tids+"ptarget varchar(8) ";
@@ -68,7 +67,7 @@ void playOffPlanSQL::savePlan()
         else {
             tempInitStr[0] = QString::number(planList.at(i).initPos.ballX)+"|"+QString::number(planList.at(i).initPos.ballY);
         }
-        for (int j = 0; j < 8; j++) {
+        for (int j = 0; j < 6; j++) {
             if (planList.at(i).initPos.AgentX[j] == -100 || planList.at(i).initPos.AgentY[j] == -100) {
                 tempInitStr[j+1] = "na";
             }
@@ -89,7 +88,7 @@ void playOffPlanSQL::savePlan()
 int playOffPlanSQL::findMaxSteps(planStruct &_plan)
 {
     int max = -1;
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 6; i++) {
         if (max < _plan.AgentPlan[i].count()) {
             max = _plan.AgentPlan[i].count();
         }
@@ -107,13 +106,11 @@ void playOffPlanSQL::addEachPlanToSql(planStruct _plan, QString tName)
                     _plan.AgentPlan[2],
                     _plan.AgentPlan[3],
                     _plan.AgentPlan[4],
-                    _plan.AgentPlan[5],
-                    _plan.AgentPlan[6],
-                    _plan.AgentPlan[7]);
+                    _plan.AgentPlan[5]);
     }
 }
 
-void playOffPlanSQL::addStepToSql(QString tName, int tid, QList<PlayOffRobot> &tA1, QList<PlayOffRobot> &tA2, QList<PlayOffRobot> &tA3, QList<PlayOffRobot> &tA4, QList<PlayOffRobot> &tA5, QList<PlayOffRobot> &tA6, QList<PlayOffRobot> &tA7, QList<PlayOffRobot> &tA8)
+void playOffPlanSQL::addStepToSql(QString tName, int tid, QList<PlayOffRobot> &tA1, QList<PlayOffRobot> &tA2, QList<PlayOffRobot> &tA3, QList<PlayOffRobot> &tA4, QList<PlayOffRobot> &tA5, QList<PlayOffRobot> &tA6)
 {
     QString tempStr = "";
     if (tA1.count() > tid) {
@@ -153,20 +150,6 @@ void playOffPlanSQL::addStepToSql(QString tName, int tid, QList<PlayOffRobot> &t
 
     if (tA6.count() > tid) {
         tempStr += " , "+convertStructToSQLCmd(6, tA6.at(tid));
-    }
-    else {
-        tempStr += " , "+convertEmptyStructToSQLCmd();
-    }
-
-    if (tA7.count() > tid) {
-        tempStr += " , "+convertStructToSQLCmd(7, tA7.at(tid));
-    }
-    else {
-        tempStr += " , "+convertEmptyStructToSQLCmd();
-    }
-    
-    if (tA8.count() > tid) {
-        tempStr += " , "+convertStructToSQLCmd(8, tA8.at(tid));
     }
     else {
         tempStr += " , "+convertEmptyStructToSQLCmd();
@@ -247,21 +230,17 @@ int playOffPlanSQL::addPlan(QList<PlayOffRobot> tPlan[],
                             int agentSize,
                             int itemId,
                             unsigned int _chance,
-                            double _lastDist,
-                            int _maxEffective,
-                            int _minNeeded)
+                            double _lastDist)
 {
     planStruct tempPlan;
-    tempPlan.tags         = _tags;
-    tempPlan.chance       = _chance;
-    tempPlan.initPos      = tInitPos;
-    tempPlan.lastDist     = _lastDist;
-    tempPlan.planMode     = tPOMode;
-    tempPlan.agentSize    = agentSize;
-    tempPlan.maxEffective = _maxEffective;
-    tempPlan.minNeeded    = _minNeeded;
+    tempPlan.tags      = _tags;
+    tempPlan.chance    = _chance;
+    tempPlan.initPos   = tInitPos;
+    tempPlan.lastDist  = _lastDist;
+    tempPlan.planMode  = tPOMode;
+    tempPlan.agentSize = agentSize;
     PlayOffRobot tempPOP;
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 6; i++) {
         for (int j = 0; j < tPlan[i].count(); j++) {
             tempPOP = tPlan[i].at(j);
             tempPlan.AgentPlan[i].append(tempPOP);
@@ -374,27 +353,12 @@ void playOffPlanSQL::insertPlanToQList(QList<PlayOffRobot> _planList[], planMDat
     if (index < 0) {
         return;
     }
-    mData.tags         = planList.at(index).tags;
-    mData.chance       = planList.at(index).chance;
-    mData.lastDist     = planList.at(index).lastDist;
-    mData.planMode     = planList.at(index).planMode;
-    mData.agentSize    = planList.at(index).agentSize;
-
-    int maxeff = planList.at(index).maxEffective;
-    if(maxeff <= planList.at(index).agentSize){
-        mData.maxEffective = maxeff;
-    } else {
-        mData.maxEffective = planList.at(index).agentSize;
-        maxeff = mData.maxEffective;
-    }
-
-    if(planList.at(index).minNeeded <= maxeff){
-        mData.minNeeded = planList.at(index).minNeeded;
-    } else {
-        mData.minNeeded= maxeff;
-    }
-
-    for (int i = 0; i < 8; i++) {
+    mData.tags      = planList.at(index).tags;
+    mData.chance    = planList.at(index).chance;
+    mData.lastDist  = planList.at(index).lastDist;
+    mData.planMode  = planList.at(index).planMode;
+    mData.agentSize = planList.at(index).agentSize;
+    for (int i = 0; i < 6; i++) {
         _planList[i].clear();
         for (int j = 0; j < planList.at(index).AgentPlan[i].count(); j++) {
             _planList[i].append(planList.at(index).AgentPlan[i].at(j));

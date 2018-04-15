@@ -170,10 +170,6 @@ private slots:
 
     void on_doubleSpinBox_valueChanged(double arg1);
 
-    void on_Max_Effective_currentIndexChanged(int arg1);
-
-    void on_Min_Needed_currentIndexChanged(int arg1);
-
     /* Play off */
     void playOffActivePass();
     void playOffActiveReceivePass();
