@@ -44,6 +44,10 @@ MainWindow::MainWindow(QWidget *parent) :
     playOff->setLineEdits(ui->POTBPosX, ui->POTBPosY, ui->POTBPosAng, ui->POTBPosTol);
     playOff->setStatusBar(ui->statusBar);
     playOff->setAgentSizeCB(ui->comboBox_2);
+    playOff->setMaxEffectiveCB(ui->Max_Effective);
+    playOff->setMinNeededCB(ui->Min_Needed);
+    playOff->setChanceSB(ui->spinBox_2);
+    playOff->setLastDistDSB(ui->doubleSpinBox);
     playOffCurrentPlan = 0;
     playOffCreateActions();
     playOffNew = false;
@@ -1102,6 +1106,23 @@ void MainWindow::on_doubleSpinBox_valueChanged(double arg1)
         playOff->apply(playOffCurrentPlan);
     }
 }
+
+void MainWindow::on_Max_Effective_currentIndexChanged(int arg1)
+{
+    if (currentVPMode == PlayOff) {
+        playOff->setMaxEffective(arg1+2);
+        playOff->apply(playOffCurrentPlan);
+    }
+}
+
+void MainWindow::on_Min_Needed_currentIndexChanged(int arg1)
+{
+    if (currentVPMode == PlayOff) {
+        playOff->setMinNeeded(arg1+2);
+        playOff->apply(playOffCurrentPlan);
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_Send_clicked()
 {
