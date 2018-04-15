@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(ssl-visual-planner)
 
-add_compile_options(-std=c++14)
+add_compile_options(-std=c++11)
 
 file(GLOB_RECURSE LibFiles "include/*.h")
 add_custom_target(headers SOURCES ${LibFiles})
