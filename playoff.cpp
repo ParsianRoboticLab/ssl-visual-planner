@@ -2429,8 +2429,8 @@ void playoff::readJSON(const QJsonObject &playBook)
 
         planTEMP.initPos.ballX = ballPos.x;
         planTEMP.initPos.ballY = ballPos.y;
-
         QJsonArray agentInitPosArray = plan["agentInitPos"].toArray();
+        planTEMP.agentSize = agentInitPosArray.size();
         for(int i = 0; i < planTEMP.agentSize; i++) {
             Vector2I agentPos = convertPosInverse(Vector2D(agentInitPosArray.at(i).toObject()["x"].toDouble(),
                                                   agentInitPosArray.at(i).toObject()["y"].toDouble()));
@@ -2460,6 +2460,7 @@ void playoff::readJSON(const QJsonObject &playBook)
                 posTEMP.angle     = position["angel"].toDouble();
                 posTEMP.tolerance = position["tolerance"].toInt();
                 posTEMP.agent     = agent["ID"].toInt();
+                posTEMP.temp      = false;
 
                 QJsonArray skillsJSON = position["skills"].toArray();
                 posTEMP.skillSize = skillsJSON.size();
