@@ -1,6 +1,6 @@
 #include "playonplansql.h"
 
-playOnPlanSQL::playOnPlanSQL(QString directory)
+PlayOnPlanSQL::PlayOnPlanSQL(QString directory)
 {
 //    planSQL = QSqlDatabase::addDatabase("QSQLITE");
 //    planSQL.setDatabaseName(directory);
@@ -14,7 +14,7 @@ playOnPlanSQL::playOnPlanSQL(QString directory)
 //    }
 }
 
-bool playOnPlanSQL::changeSQLDir(QString directory)
+bool PlayOnPlanSQL::changeSQLDir(QString directory)
 {
     planSQL.setDatabaseName(directory);
     if (!planSQL.open()) {
@@ -28,7 +28,7 @@ bool playOnPlanSQL::changeSQLDir(QString directory)
     return true;
 }
 
-EndPolicy playOnPlanSQL::getPolicyByIndex(int index)
+EndPolicy PlayOnPlanSQL::getPolicyByIndex(int index)
 {
     switch (index) {
     default:
@@ -43,7 +43,7 @@ EndPolicy playOnPlanSQL::getPolicyByIndex(int index)
     }
 }
 
-int playOnPlanSQL::getIntByEnum(EndPolicy tEnum)
+int PlayOnPlanSQL::getIntByEnum(EndPolicy tEnum)
 {
     switch (tEnum)
     {
@@ -61,7 +61,7 @@ int playOnPlanSQL::getIntByEnum(EndPolicy tEnum)
     }
 }
 
-Skills playOnPlanSQL::getPSkillByIndex(int index)
+Skills PlayOnPlanSQL::getPSkillByIndex(int index)
 {
     switch (index) {
     case 0:
@@ -101,7 +101,7 @@ Skills playOnPlanSQL::getPSkillByIndex(int index)
     }
 }
 
-int playOnPlanSQL::getIntByEnum(Skills tEnum)
+int PlayOnPlanSQL::getIntByEnum(Skills tEnum)
 {
     switch (tEnum) {
     case None:
@@ -139,7 +139,7 @@ int playOnPlanSQL::getIntByEnum(Skills tEnum)
     }
 }
 
-QString playOnPlanSQL::getCommentForSQL(QString string)
+QString PlayOnPlanSQL::getCommentForSQL(QString string)
 {
     QString tempText = string;
     QStringList tempTextList = tempText.split("\n");
@@ -147,7 +147,7 @@ QString playOnPlanSQL::getCommentForSQL(QString string)
     return tempText;
 }
 
-QString playOnPlanSQL::getCommentForPlanner(QString string)
+QString PlayOnPlanSQL::getCommentForPlanner(QString string)
 {
     QString tempText = string;
     QStringList tempTextList = tempText.split("*spc*");
@@ -155,7 +155,7 @@ QString playOnPlanSQL::getCommentForPlanner(QString string)
     return tempText;
 }
 
-QString playOnPlanSQL::savePlanCommand(QString tableName, AgentPlan planStruct, int agentSize, int planId)
+QString PlayOnPlanSQL::savePlanCommand(QString tableName, AgentPlan planStruct, int agentSize, int planId)
 {
     QString str = "INSERT INTO "+tableName+" VALUES ( ";
     str += QString::number(planId)+", ";
@@ -181,7 +181,7 @@ QString playOnPlanSQL::savePlanCommand(QString tableName, AgentPlan planStruct, 
     return str;
 }
 
-void playOnPlanSQL::savePlanListInSQL(QSqlQuery &_query)
+void PlayOnPlanSQL::savePlanListInSQL(QSqlQuery &_query)
 {
     QString str;
     for (int i = 0; i < playOnPlans.length(); i++) {
@@ -194,7 +194,7 @@ void playOnPlanSQL::savePlanListInSQL(QSqlQuery &_query)
     }
 }
 
-void playOnPlanSQL::savePlan()
+void PlayOnPlanSQL::savePlan()
 {
     QSqlQuery squery;
     if(planSQL.tables().contains("playonplans"))
@@ -268,7 +268,7 @@ void playOnPlanSQL::savePlan()
     }
 }
 
-void playOnPlanSQL::insertToList(QList<AgentPlan> &list, QSqlQuery query, int agentSize)
+void PlayOnPlanSQL::insertToList(QList<AgentPlan> &list, QSqlQuery query, int agentSize)
 {
     bool errorCheck = true;
     while (query.next()) {
@@ -303,7 +303,7 @@ void playOnPlanSQL::insertToList(QList<AgentPlan> &list, QSqlQuery query, int ag
     }
 }
 
-void playOnPlanSQL::loadPlan()
+void PlayOnPlanSQL::loadPlan()
 {
     QSqlQuery query;
     playOnPlans.clear();
@@ -371,7 +371,7 @@ void playOnPlanSQL::loadPlan()
     }
 }
 
-bool playOnPlanSQL::addPlan(int planId, AgentPlan plan, QString &str)
+bool PlayOnPlanSQL::addPlan(int planId, AgentPlan plan, QString &str)
 {
     PlayOnPlan tempPlayOffPlan;
     tempPlayOffPlan.planId = planId;
@@ -392,7 +392,7 @@ bool playOnPlanSQL::addPlan(int planId, AgentPlan plan, QString &str)
     return true;
 }
 
-void playOnPlanSQL::removePlan(int _index)
+void PlayOnPlanSQL::removePlan(int _index)
 {
     if (_index < getPlanSize()) {
         playOnPlans.removeAt(_index);
@@ -400,17 +400,17 @@ void playOnPlanSQL::removePlan(int _index)
     }
 }
 
-playOnPlanSQL::~playOnPlanSQL()
+PlayOnPlanSQL::~PlayOnPlanSQL()
 {
 
 }
 
-void playOnPlanSQL::disableSQL()
+void PlayOnPlanSQL::disableSQL()
 {
     planSQL.close();
 }
 
-void playOnPlanSQL::enableSQL()
+void PlayOnPlanSQL::enableSQL()
 {
     planSQL = QSqlDatabase::addDatabase("QSQLITE");
     planSQL.setDatabaseName("temp.db");
@@ -424,12 +424,12 @@ void playOnPlanSQL::enableSQL()
     }
 }
 
-int playOnPlanSQL::getPlanSize()
+int PlayOnPlanSQL::getPlanSize()
 {
     return playOnPlans.length();
 }
 
-AgentPlan playOnPlanSQL::getPlan(int _index)
+AgentPlan PlayOnPlanSQL::getPlan(int _index)
 {
     return agentPlan.at(_index);
 }

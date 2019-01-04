@@ -136,7 +136,7 @@ private:
     //
     QString getSkillTextByEnum(Skills skill);
     //sql side
-    playOnPlanSQL *myPlan;
+    PlayOnPlanSQL *myPlan;
 public:
     void disableSQL();
     void enableSQL();

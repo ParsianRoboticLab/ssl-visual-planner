@@ -34,7 +34,7 @@ playon::playon(QWidget *parent) :
     currentPlan = new AgentPlanClass();
     currentPlan->clear(1);
 
-    myPlan = new playOnPlanSQL("tempplayoff.sql");
+    myPlan = new PlayOnPlanSQL("tempplayoff.sql");
     rightClickEmpty = false;
 }
 

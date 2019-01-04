@@ -11,11 +11,11 @@
 #include <QMessageBox>
 #include <QtSql/QSqlError>
 
-class playOnPlanSQL
+class PlayOnPlanSQL
 {
 public:
-  playOnPlanSQL(QString directory);
-  ~playOnPlanSQL();
+  PlayOnPlanSQL(QString directory);
+  ~PlayOnPlanSQL();
   bool changeSQLDir(QString directory);
 
 
