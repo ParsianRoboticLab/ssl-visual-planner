@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/ParsianRoboticLab/ssl-visual-planner.svg?branch=master)](https://travis-ci.org/ParsianRoboticLab/ssl-visual-planner)
+[![CodeFactor](https://www.codefactor.io/repository/github/parsianroboticlab/ssl-visual-planner/badge)](https://www.codefactor.io/repository/github/parsianroboticlab/ssl-visual-planner)
 
 Visual Planner
 =====
