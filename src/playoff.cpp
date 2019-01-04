@@ -1,7 +1,17 @@
 #include "playoff.h"
 
 playoff::playoff(QWidget *parent) :
-        QWidget(parent)
+        QWidget(parent),
+        lineColors{
+             QColor(243, 223, 28),
+             QColor(191, 25, 148),
+             QColor(25, 191, 28),
+             QColor(255, 131, 29),
+             QColor(231, 106, 80),
+             QColor(9, 106, 80),
+             QColor(80, 100, 255),
+             QColor(40, 40, 40)
+        }
 {
     fieldPix = new QPixmap(":images/quadField.png");
     currentRobot.agent = -1;
@@ -36,6 +46,8 @@ playoff::playoff(QWidget *parent) :
 
     maxEff = 2;
     minNeed = 2;
+
+
 
 }
 
@@ -578,125 +590,18 @@ void playoff::drawRobot(QPainter &painter, int x, int y, QString label, int agen
 
 void playoff::drawRobots(QPainter &painter, int tRobotIndex, bool selected)
 {
+
+
+    drawStatesLine(painter, tRobotIndex);
+
     QPen tempPen;
-    tempPen.setWidth(1);
 
-    QPen tempBPen;
-    tempBPen.setWidth(3);
-
-    if (tRobotIndex == displayMode || displayMode == -1) {
-        tempBPen.setColor(QColor(68, 132, 127));
-        tempPen.setColor(QColor(243, 223, 28));
-
-    } else {
-        tempBPen.setColor(QColor(68, 132, 127, 64));
-        tempPen.setColor(QColor(243, 223, 28, 64));
-
-    }
-    switch (tRobotIndex) {
-        case 0:
-            tempPen.setColor(QColor(243, 223, 28));
-            break;
-        case 1:
-            tempPen.setColor(QColor(191, 25, 148));
-            break;
-        case 2:
-            tempPen.setColor(QColor(25, 191, 28));
-            break;
-        case 3:
-            tempPen.setColor(QColor(255, 131, 29));
-            break;
-        case 4:
-            tempPen.setColor(QColor(231, 106, 80));
-            break;
-        case 5:
-            tempPen.setColor(QColor(9, 106, 80));
-            break;
-        case 6: // TODO: new color
-            tempPen.setColor(QColor(80, 100, 255));
-            break;
-        case 7: // TODO: new color
-            tempPen.setColor(QColor(40, 40, 40));
-            break;
-        default:
-            tempPen.setColor(QColor(243, 223, 28));
-            break;
-    }
-
-    // Transparent when it's not selected
-    if (tRobotIndex != displayMode && displayMode != -1) {
-        QColor temp = tempPen.color();
-        temp.setAlpha(64);
-        tempPen.setColor(temp);
-    }
-
-    //    SolidLine,
-    //    DashLine,
-    //    DotLine,
-    //    DashDotLine,
-    //    DashDotDotLine,
-    //    CustomDashLine
-    tempPen.setStyle(Qt::DashLine);
-
-    for (int i = 1; i < robots[tRobotIndex].length(); i++) {
-        painter.setPen(tempBPen);
-        painter.drawLine(QPoint(robots[tRobotIndex].at(i - 1).x, robots[tRobotIndex].at(i - 1).y),
-                         QPoint(robots[tRobotIndex].at(i).x, robots[tRobotIndex].at(i).y));
-        painter.setPen(tempPen);
-        painter.drawLine(QPoint(robots[tRobotIndex].at(i - 1).x, robots[tRobotIndex].at(i - 1).y),
-                         QPoint(robots[tRobotIndex].at(i).x, robots[tRobotIndex].at(i).y));
-    }
-
-    if (currentRobot.agent != -1 && (displayMode == currentRobot.agent || displayMode == -1)  && !showAll) {
-        if (robots[tRobotIndex].length()) {
-            tempPen.setWidth(2);
-            tempPen.setColor(QColor(209, 26, 28, 64));
-
-            QRect tempCircle(QPoint(robots[currentRobot.agent].at(currentRobot.index).x, robots[currentRobot.agent].at(currentRobot.index).y)-QPoint(25, 25),
-                             QSize(50, 50));
-            painter.setPen(tempPen);
-            painter.drawArc(tempCircle, 0, 360*16);
-            QLine tempAngle;
-            tempAngle.setP1(QPoint(robots[currentRobot.agent].at(currentRobot.index).x, robots[currentRobot.agent].at(currentRobot.index).y));
-            tempAngle.setP2(QPoint(static_cast<int>(_RobotAngRad * cos((robots[currentRobot.agent].at(currentRobot.index).angle / 360 ) * 2 * M_PI ) + robots[currentRobot.agent].at(currentRobot.index).x),
-                                   static_cast<int>(_RobotAngRad * sin((robots[currentRobot.agent].at(currentRobot.index).angle / 360 ) * 2 * M_PI ) + robots[currentRobot.agent].at(currentRobot.index).y)));
-            tempPen.setColor(QColor(209, 26, 28));
-            painter.setPen(tempPen);
-            painter.drawLine(tempAngle);
-
-            painter.drawEllipse(robots[currentRobot.agent].at(currentRobot.index).angRect);
-
-            if (robots[currentRobot.agent].at(currentRobot.index).tolerance > 0) {
-                tempPen.setWidth(1);
-                tempPen.setColor(QColor(Qt::cyan));
-                tempPen.setStyle(Qt::SolidLine);
-                painter.setPen(tempPen);
-                QPoint tempPoint(robots[currentRobot.agent].at(currentRobot.index).tolerance,
-                                 robots[currentRobot.agent].at(currentRobot.index).tolerance);
-                QRect tempTol(QPoint(robots[currentRobot.agent].at(currentRobot.index).x, robots[currentRobot.agent].at(currentRobot.index).y)-tempPoint,
-                              QSize(robots[currentRobot.agent].at(currentRobot.index).tolerance*2,
-                                    robots[currentRobot.agent].at(currentRobot.index).tolerance*2));
-                painter.drawArc(tempTol,0,360*16);
-            }
-        }
+    if (currentRobot.agent != -1 && displayMode == currentRobot.agent && !showAll) {
+        drawMinimalRobot(painter, currentRobot.index, currentRobot.agent);
     } else if (showAll) {
         tempPen.setStyle(Qt::SolidLine);
         for (int i = 0; i < robots[tRobotIndex].length(); i++) {
-            tempPen.setWidth(2);
-            tempPen.setColor(QColor(209, 26, 28, 64));
-
-            QRect tempCircle(QPoint(robots[tRobotIndex].at(i).x, robots[tRobotIndex].at(i).y)-QPoint(25, 25),
-                             QSize(50, 50));
-            painter.setPen(tempPen);
-            painter.drawArc(tempCircle, 0, 360*16);
-            QLine tempAngle;
-            tempAngle.setP1(QPoint(robots[tRobotIndex].at(i).x, robots[tRobotIndex].at(i).y));
-            tempAngle.setP2(QPoint(
-                    static_cast<int>(_RobotAngRad * cos((robots[tRobotIndex].at(i).angle / 360 ) * 2 * M_PI ) + robots[tRobotIndex].at(i).x),
-                    static_cast<int>(_RobotAngRad * sin((robots[tRobotIndex].at(i).angle / 360 ) * 2 * M_PI ) + robots[tRobotIndex].at(i).y)));
-            tempPen.setColor(QColor(209, 26, 28));
-            painter.setPen(tempPen);
-            painter.drawLine(tempAngle);
+            drawMinimalRobot(painter, i, tRobotIndex);
         }
     }
 
@@ -1795,6 +1700,74 @@ void playoff::POPaste()
         }
     }
     draw();
+}
+
+void playoff::drawStatesLine(QPainter &_painter, int _stateIndex) {
+    QPen tempPen;
+    tempPen.setWidth(1);
+    tempPen.setColor(lineColors[_stateIndex]);
+    tempPen.setStyle(Qt::DashLine);
+
+    QPen tempBPen;
+    tempBPen.setWidth(3);
+    tempBPen.setColor(QColor(68, 132, 127));
+
+    // Transparent when it's not selected
+    if (_stateIndex != displayMode && displayMode != -1) {
+        QColor temp = tempPen.color();
+        temp.setAlpha(64);
+        tempPen.setColor(temp);
+        temp = tempBPen.color();
+        temp.setAlpha(64);
+        tempBPen.setColor(temp);
+    }
+
+
+    for (int i = 1; i < robots[_stateIndex].length(); i++) {
+        _painter.setPen(tempBPen);
+        _painter.drawLine(QPoint(robots[_stateIndex].at(i - 1).x, robots[_stateIndex].at(i - 1).y),
+                         QPoint(robots[_stateIndex].at(i).x, robots[_stateIndex].at(i).y));
+        _painter.setPen(tempPen);
+        _painter.drawLine(QPoint(robots[_stateIndex].at(i - 1).x, robots[_stateIndex].at(i - 1).y),
+                         QPoint(robots[_stateIndex].at(i).x, robots[_stateIndex].at(i).y));
+    }
+
+}
+
+void playoff::drawMinimalRobot(QPainter &_painter, int _robotIndex, int _stateIndex) {
+    if (robots[_stateIndex].length()) {
+        QPen tempPen;
+        tempPen.setWidth(2);
+        tempPen.setColor(QColor(209, 26, 28, 64));
+        _painter.setPen(tempPen);
+
+        QRect tempCircle(QPoint(robots[_stateIndex].at(_robotIndex).x, robots[_stateIndex].at(_robotIndex).y)-QPoint(25, 25),
+                         QSize(50, 50));
+        _painter.drawArc(tempCircle, 0, 360*16);
+        QLine tempAngle;
+        tempAngle.setP1(QPoint(robots[_stateIndex].at(_robotIndex).x, robots[_stateIndex].at(_robotIndex).y));
+        tempAngle.setP2(QPoint(static_cast<int>(_RobotAngRad * cos((robots[_stateIndex].at(_robotIndex).angle / 360 ) * 2 * M_PI ) + robots[_stateIndex].at(_robotIndex).x),
+                               static_cast<int>(_RobotAngRad * sin((robots[_stateIndex].at(_robotIndex).angle / 360 ) * 2 * M_PI ) + robots[_stateIndex].at(_robotIndex).y)));
+
+
+        tempPen.setColor(QColor(209, 26, 28));
+        _painter.setPen(tempPen);
+        _painter.drawLine(tempAngle);
+        _painter.drawEllipse(robots[_stateIndex].at(_robotIndex).angRect);
+
+        if (robots[_stateIndex].at(_robotIndex).tolerance > 0) {
+            tempPen.setWidth(1);
+            tempPen.setColor(QColor(Qt::cyan));
+            tempPen.setStyle(Qt::SolidLine);
+            _painter.setPen(tempPen);
+            QPoint tempPoint(robots[_stateIndex].at(_robotIndex).tolerance,
+                             robots[_stateIndex].at(_robotIndex).tolerance);
+            QRect tempTol(QPoint(robots[_stateIndex].at(_robotIndex).x, robots[_stateIndex].at(_robotIndex).y)-tempPoint,
+                          QSize(robots[_stateIndex].at(_robotIndex).tolerance*2,
+                                robots[_stateIndex].at(_robotIndex).tolerance*2));
+            _painter.drawArc(tempTol,0,360*16);
+        }
+    }
 }
 
 POInitPos playoff::getInitPos()

@@ -20,7 +20,7 @@
 #include <QDoubleSpinBox>
 #include <QSpinBox>
 
-#include <base.h>
+#include "base.h"
 #include "playoffplansql.h"
 #include "ul.h"
 
@@ -237,6 +237,9 @@ private:
     unsigned int chance;
     double lastDist;
 
+    void drawStatesLine(QPainter& _painter, int _stateIndex);
+    QColor lineColors[_MAX_ROBOT_COUNT];
+    void drawMinimalRobot(QPainter& _painter, int _robotIndex, int _stateIndex);
     //sql side
 public:
     POInitPos getInitPos();
