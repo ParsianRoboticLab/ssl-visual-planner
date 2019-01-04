@@ -593,13 +593,9 @@ void playoff::drawRobots(QPainter &painter, int tRobotIndex, bool selected)
 
 
     drawStatesLine(painter, tRobotIndex);
-
-    QPen tempPen;
-
     if (currentRobot.agent != -1 && displayMode == currentRobot.agent && !showAll) {
         drawMinimalRobot(painter, currentRobot.index, currentRobot.agent);
     } else if (showAll) {
-        tempPen.setStyle(Qt::SolidLine);
         for (int i = 0; i < robots[tRobotIndex].length(); i++) {
             drawMinimalRobot(painter, i, tRobotIndex);
         }
@@ -611,38 +607,7 @@ void playoff::drawRobots(QPainter &painter, int tRobotIndex, bool selected)
     QPoint tempP1;
     QPoint tempP2;
     QBrush arrowBrush;
-
-
-
-    for (int i = 0; i < robots[tRobotIndex].length(); i++) {
-        if (robots[tRobotIndex].at(i).target.agent != -1 && robots[tRobotIndex].at(i).target.index != -1 ) {
-            if (robots[robots[tRobotIndex].at(i).target.agent].count() - 1 >= robots[tRobotIndex].at(i).target.index) {
-                for (int j = 0; j < 3; j++) {
-                    if (robots[tRobotIndex].at(i).skill[j] == PassSkill) {
-                        tempP1.setX(robots[tRobotIndex].at(i).x);
-                        tempP1.setY(robots[tRobotIndex].at(i).y);
-                        tempP2.setX(robots[robots[tRobotIndex].at(i).target.agent].at(robots[tRobotIndex].at(i).target.index).x);
-                        tempP2.setY(robots[robots[tRobotIndex].at(i).target.agent].at(robots[tRobotIndex].at(i).target.index).y);
-
-                        tempAng = atan2(tempP2.y() - tempP1.y(),
-                                        tempP2.x() - tempP1.x());
-                        tempPoly.append(tempP2);
-                        tempPoly.append(QPoint(static_cast<int>(tempP1.x() + cos(tempAng - M_PI_2) * tempArrowW),
-                                               static_cast<int>(tempP1.y() + sin(tempAng - M_PI_2) * tempArrowW)));
-                        tempPoly.append(QPoint(static_cast<int>(tempP1.x() + cos(tempAng) * tempArrowW * 3),
-                                               static_cast<int>(tempP1.y() + sin(tempAng) * tempArrowW * 3)));
-                        tempPoly.append(QPoint(static_cast<int>(tempP1.x() + cos(tempAng + M_PI_2) * tempArrowW),
-                                               static_cast<int>(tempP1.y() + sin(tempAng + M_PI_2) * tempArrowW)));
-                        tempPoly.append(tempP2);
-                        painter.drawPolygon(tempPoly);
-                    }
-                }
-            }
-        }
-    }
-
-
-
+    QPen tempPen;
 
     for (int i = 0; i < robots[tRobotIndex].length(); i++) {
         for (int j = 0; j < 3; j++) {
