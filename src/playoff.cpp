@@ -610,16 +610,9 @@ void playoff::drawRobots(QPainter &painter, int tRobotIndex, bool selected)
     QPolygon tempPoly;
     QPoint tempP1;
     QPoint tempP2;
-
-    tempPen.setWidth(1);
-    tempPen.setColor(QColor(32, 79, 105, 128));
-    tempPen.setStyle(Qt::SolidLine);
-    painter.setPen(tempPen);
     QBrush arrowBrush;
-    arrowBrush.setColor(QColor(32, 79, 105, 128));
-    arrowBrush.setStyle(Qt::SolidPattern);
-    painter.setBrush(arrowBrush);
-    tempPoly.clear();
+
+
 
     for (int i = 0; i < robots[tRobotIndex].length(); i++) {
         if (robots[tRobotIndex].at(i).target.agent != -1 && robots[tRobotIndex].at(i).target.index != -1 ) {
@@ -649,102 +642,55 @@ void playoff::drawRobots(QPainter &painter, int tRobotIndex, bool selected)
     }
 
 
-    tempPen.setWidth(1);
-    tempPen.setColor(QColor(165, 17, 19, 100));
-    tempPen.setStyle(Qt::SolidLine);
-    painter.setPen(tempPen);
-    arrowBrush.setColor(QColor(165, 17, 19, 100));
-    arrowBrush.setStyle(Qt::SolidPattern);
-    painter.setBrush(arrowBrush);
-    tempPoly.clear();
+
 
     for (int i = 0; i < robots[tRobotIndex].length(); i++) {
         for (int j = 0; j < 3; j++) {
-            if (robots[tRobotIndex].at(i).skill[j] == ShotToGoalSkill) {
-                tempP1.setX(robots[tRobotIndex].at(i).x);
-                tempP1.setY(robots[tRobotIndex].at(i).y);
+            PlayOffSkills temp = robots[tRobotIndex].at(i).skill[j];
+            if (temp == ShotToGoalSkill) {
+                tempPen.setColor(QColor(165, 17, 19, 100));
+                arrowBrush.setColor(QColor(165, 17, 19, 100));
+            } else if (temp == ChipToGoalSkill) {
+                tempPen.setColor(QColor(248, 245, 42, 100));
+                arrowBrush.setColor(QColor(248, 245, 42, 100));
+            } else if (temp == OneTouchSkill) {
+                tempPen.setColor(QColor(234, 99, 11, 190));
+                arrowBrush.setColor(QColor(234, 99, 11, 190));
+            } else if (temp == PassSkill) {
+                tempPen.setColor(QColor(32, 79, 105, 128));
+                arrowBrush.setColor(QColor(32, 79, 105, 128));
+            } else {
+                continue;
+            }
+
+            tempPen.setWidth(1);
+            tempPen.setStyle(Qt::SolidLine);
+            arrowBrush.setStyle(Qt::SolidPattern);
+            tempPoly.clear();
+            painter.setBrush(arrowBrush);
+            painter.setPen(tempPen);
+
+            tempP1.setX(robots[tRobotIndex].at(i).x);
+            tempP1.setY(robots[tRobotIndex].at(i).y);
+            if (temp == PassSkill) {
+                tempP2.setX(robots[robots[tRobotIndex].at(i).target.agent].at(robots[tRobotIndex].at(i).target.index).x);
+                tempP2.setY(robots[robots[tRobotIndex].at(i).target.agent].at(robots[tRobotIndex].at(i).target.index).y);
+            } else {
                 tempP2.setX(1148);
                 tempP2.setY(static_cast<int>(516 - (110 * (double(robots[tRobotIndex].at(i).skillData[j][1]) / 1000))));
-
-                tempAng = atan2(tempP2.y() - tempP1.y(),
-                                tempP2.x() - tempP1.x());
-
-                tempPoly.append(tempP2);
-                tempPoly.append(QPoint(static_cast<int>(tempP1.x() + cos(tempAng - M_PI_2) * tempArrowW),
-                                       static_cast<int>(tempP1.y() + sin(tempAng - M_PI_2) * tempArrowW)));
-                tempPoly.append(QPoint(static_cast<int>(tempP1.x() + cos(tempAng) * tempArrowW * 3),
-                                       static_cast<int>(tempP1.y() + sin(tempAng) * tempArrowW * 3)));
-                tempPoly.append(QPoint(static_cast<int>(tempP1.x() + cos(tempAng + M_PI_2) * tempArrowW),
-                                       static_cast<int>(tempP1.y() + sin(tempAng + M_PI_2) * tempArrowW)));
-                tempPoly.append(tempP2);
-                painter.drawPolygon(tempPoly);
             }
-        }
-    }
+            tempAng = atan2(tempP2.y() - tempP1.y(),
+                            tempP2.x() - tempP1.x());
 
-    tempPen.setWidth(1);
-    tempPen.setColor(QColor(248, 245, 42, 100));
-    tempPen.setStyle(Qt::SolidLine);
-    painter.setPen(tempPen);
-    arrowBrush.setColor(QColor(248, 245, 42, 100));
-    arrowBrush.setStyle(Qt::SolidPattern);
-    painter.setBrush(arrowBrush);
-    tempPoly.clear();
-
-    for (int i = 0; i < robots[tRobotIndex].length(); i++) {
-        for (int j = 0; j < 3; j++) {
-            if (robots[tRobotIndex].at(i).skill[j] == ChipToGoalSkill) {
-                tempP1.setX(robots[tRobotIndex].at(i).x);
-                tempP1.setY(robots[tRobotIndex].at(i).y);
-                tempP2.setX(1148);
-                tempP2.setY(static_cast<int>(516 - (110 * (double(robots[tRobotIndex].at(i).skillData[j][1]) / 1000))));
-
-                tempAng = atan2(tempP2.y() - tempP1.y(),
-                                tempP2.x() - tempP1.x());
-
-                tempPoly.append(tempP2);
-                tempPoly.append(QPoint(static_cast<int>(tempP1.x() + cos(tempAng - M_PI_2) * tempArrowW),
-                                       static_cast<int>(tempP1.y() + sin(tempAng - M_PI_2) * tempArrowW)));
-                tempPoly.append(QPoint(static_cast<int>(tempP1.x() + cos(tempAng) * tempArrowW * 3),
-                                       static_cast<int>(tempP1.y() + sin(tempAng) * tempArrowW * 3)));
-                tempPoly.append(QPoint(static_cast<int>(tempP1.x() + cos(tempAng + M_PI_2) * tempArrowW),
-                                       static_cast<int>(tempP1.y() + sin(tempAng + M_PI_2) * tempArrowW)));
-                tempPoly.append(tempP2);
-                painter.drawPolygon(tempPoly);
-            }
-        }
-    }
-
-    tempPen.setWidth(1);
-    tempPen.setColor(QColor(234, 99, 11, 190));
-    tempPen.setStyle(Qt::SolidLine);
-    painter.setPen(tempPen);
-    arrowBrush.setColor(QColor(234, 99, 11, 190));
-    arrowBrush.setStyle(Qt::SolidPattern);
-    painter.setBrush(arrowBrush);
-    tempPoly.clear();
-
-    for (int i = 0; i < robots[tRobotIndex].length(); i++) {
-        for (int j = 0; j < 3; j++) {
-            if (robots[tRobotIndex].at(i).skill[j] == OneTouchSkill) {
-                tempP1.setX(robots[tRobotIndex].at(i).x);
-                tempP1.setY(robots[tRobotIndex].at(i).y);
-                tempP2.setX(1148);
-                tempP2.setY(static_cast<int>(516 - (110 * (double(robots[tRobotIndex].at(i).skillData[j][1]) / 1000))));
-
-                tempAng = atan2(tempP2.y() - tempP1.y(),
-                                tempP2.x() - tempP1.x());
-
-                tempPoly.append(tempP2);
-                tempPoly.append(QPoint(static_cast<int>(tempP1.x() + cos(tempAng-M_PI_2)*tempArrowW),
-                                       static_cast<int>(tempP1.y() + sin(tempAng-M_PI_2)*tempArrowW)));
-                tempPoly.append(QPoint(static_cast<int>(tempP1.x() + cos(tempAng)*tempArrowW*3),
-                                       static_cast<int>(tempP1.y() + sin(tempAng)*tempArrowW*3)));
-                tempPoly.append(QPoint(static_cast<int>(tempP1.x() + cos(tempAng+M_PI_2)*tempArrowW),
-                                       static_cast<int>(tempP1.y() + sin(tempAng+M_PI_2)*tempArrowW)));
-                tempPoly.append(tempP2);
-                painter.drawPolygon(tempPoly);
-            }
+            tempPoly.append(tempP2);
+            tempPoly.append(QPoint(static_cast<int>(tempP1.x() + cos(tempAng - M_PI_2) * tempArrowW),
+                                   static_cast<int>(tempP1.y() + sin(tempAng - M_PI_2) * tempArrowW)));
+            tempPoly.append(QPoint(static_cast<int>(tempP1.x() + cos(tempAng) * tempArrowW * 3),
+                                   static_cast<int>(tempP1.y() + sin(tempAng) * tempArrowW * 3)));
+            tempPoly.append(QPoint(static_cast<int>(tempP1.x() + cos(tempAng + M_PI_2) * tempArrowW),
+                                   static_cast<int>(tempP1.y() + sin(tempAng + M_PI_2) * tempArrowW)));
+            tempPoly.append(tempP2);
+            painter.drawPolygon(tempPoly);
         }
     }
 
