@@ -1591,7 +1591,7 @@ void playoff::POOpenSkill(int index, bool temp)
                 POReceiveIA[i]->setVisible(false);
                 break;
         }
-        if (getSkill(i) == NoSkill || getSkill(i) == -1) {
+        if (getSkill(i) == NoSkill) {
             POTiming[i*2+1]->setVisible(false);
             POTimingLable[i*2+1]->setVisible(false);
         }
