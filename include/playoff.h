@@ -240,6 +240,7 @@ private:
     void drawStatesLine(QPainter& _painter, int _stateIndex);
     QColor lineColors[_MAX_ROBOT_COUNT];
     void drawMinimalRobot(QPainter& _painter, int _robotIndex, int _stateIndex);
+    void drawKickSkill(QPainter& _painter, int _stateIndex);
     //sql side
 public:
     POInitPos getInitPos();
