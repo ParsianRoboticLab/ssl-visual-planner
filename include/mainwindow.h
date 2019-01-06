@@ -58,8 +58,6 @@ public:
 
     VPMode currentVPMode;
 
-    void initVPMode();
-
     explicit MainWindow(QWidget *parent = 0);
 
     void geometryIni();
@@ -122,6 +120,9 @@ private:
 
     //tags dialog
     tags *tagDialog;
+
+    void init_mode(VPMode _mode);
+    QString save_plan(const QString& _dir);
 
 private slots:
     void playOnActivePassO();

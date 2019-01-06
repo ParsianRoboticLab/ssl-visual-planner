@@ -42,30 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     tagDialog = new tags(this);
     connect(tagDialog, SIGNAL(tagExit(QString)), this, SLOT(tagDialogExit(QString)));
 
-    if(currentVPMode == PlayOn) {
-        ui->menuBar->actions().at(0)->menu()->actions().at(0)->setChecked(true);
-        ui->menuBar->actions().at(0)->menu()->actions().at(1)->setChecked(false);
-        currentVPMode = PlayOn;
-        playOn->enableSQL();
-        playOff->disableSQL();
-        initVPMode();
-        ui->newBtn->setVisible(true);
-        playOn->enable();
-    }
-    else {
-        ui->menuBar->actions().at(0)->menu()->actions().at(0)->setChecked(false);
-        ui->menuBar->actions().at(0)->menu()->actions().at(1)->setChecked(true);
-        currentVPMode = PlayOff;
-        playOn->disableSQL();
-        playOff->enableSQL();
-        initVPMode();
-        ui->newBtn->setVisible(true);
-        playOn->disable();
-        if (playOffSpinInit) {
-            ui->spinBox->setMaximum(0);
-            playOffSpinInit = false;
-        }
-    }
+    init_mode(currentVPMode);
 
     if (Gupdate) {
         ////////////////////
@@ -653,105 +630,32 @@ void MainWindow::on_browseBtn_clicked()
 //save button event
 void MainWindow::on_saveBtn_clicked()
 {
-    QDir currentDir;
-    QSettings settings(settingAddress, QSettings::IniFormat);
-    if(currentVPMode == PlayOn)
-    {
-        int reply;
-        if(playOnOpenFileDir.length() < 2)
-        {
-            reply = QMessageBox::question(this, "Save File", "Do you want to save?",
-                                          QMessageBox::Yes|QMessageBox::Cancel);
-            if (reply == QMessageBox::Cancel)
-                return;
+
+    if(currentVPMode == PlayOn) {
+        QString temp = save_plan(playOnOpenFileDir);
+        if (temp != QString("NULL")) {
+            playOnSaveFileDir = temp;
+            playOn->savePlan(playOnSaveFileDir);
+            playOnOpenFileDir = playOnSaveFileDir;
+            //sets plan directory in window title
+            setWindowTitle("Visual Planner - " + playOnSaveFileDir);
         }
-        else
-        {
-            reply = QMessageBox::question(this, "Save File", "Do you want to save?",
-                                          QMessageBox::Save|QMessageBox::Yes|QMessageBox::Cancel);
-            if (reply == QMessageBox::Cancel)
-                return;
-        }
-
-        if(reply == QMessageBox::Yes)
-        {
-            //removes the plan file with same name
-            QFile::remove(playOffopenFileDir);
-        }
-        if(playOnOpenFileDir.length() < 2 || reply == QMessageBox::Save)
-        {
-            QString tempDir;
-            tempDir = QFileDialog::getSaveFileName(this, tr("Save plan file"),
-                                                   settings.value(DEFAULT_DIR_KEY).toString(),
-                                                   tr("SQL Files (*.db3 *.db);;All Files (*.*)"));
-            if(tempDir.length() > 2)
-                playOnSaveFileDir = tempDir;
-            else
-                return;
-        }
-        else
-            playOnSaveFileDir = playOnOpenFileDir;
-
-        playOn->savePlan(playOnSaveFileDir);
-
-        playOnOpenFileDir = playOnSaveFileDir;
-
-        settings.setValue(DEFAULT_DIR_KEY, currentDir.absoluteFilePath(playOnOpenFileDir));
-
-        //sets plan directory in window title
-        setWindowTitle("Visual Planner - "+playOnSaveFileDir);
-
-    }
-    else if(currentVPMode == PlayOff)
-    {
-        int reply;
-        if(playOffopenFileDir.length() < 2)
-        {
-            reply = QMessageBox::question(this, "Save File", "Do you want to save?",
-                                          QMessageBox::Yes|QMessageBox::Cancel);
-            if (reply == QMessageBox::Cancel)
-                return;
-        }
-        else
-        {
-            reply = QMessageBox::question(this, "Save File", "Do you want to save?",
-                                          QMessageBox::Save|QMessageBox::Yes|QMessageBox::Cancel);
-            if (reply == QMessageBox::Cancel)
-                return;
+    } else if(currentVPMode == PlayOff) {
+        QString temp = save_plan(playOffopenFileDir);
+        if (temp != QString("NULL")) {
+            playOffsaveFileDir = temp;
+            if (playOffsaveFileDir.endsWith(QString("json"))) {
+                //playOff->savePlan(playOffsaveFileDir);
+                playOff->savePlanJson(playOffsaveFileDir);
+            }
+            else {
+                playOff->savePlan(playOffsaveFileDir);
+            }
+            playOffopenFileDir = playOffsaveFileDir;
+            //sets plan directory in window title
+            setWindowTitle("Visual Planner - "+playOffsaveFileDir);
         }
 
-        if(reply == QMessageBox::Yes)
-        {
-            //removes the plan file with same name
-            QFile::remove(playOffopenFileDir);
-        }
-        if(playOffopenFileDir.length() < 2 || reply == QMessageBox::Save)
-        {
-            QString tempDir;
-            tempDir = QFileDialog::getSaveFileName(this, tr("Save plan file"),
-                                                   settings.value(DEFAULT_DIR_KEY).toString(),
-                                                   tr("Json Files (*.json);;SQL Files (*.db3 *.db);;All Files (*.*)"));
-            if(tempDir.length() > 2)
-                playOffsaveFileDir = tempDir;
-            else
-                return;
-        }
-        else
-            playOffsaveFileDir = playOffopenFileDir;
-
-        if (playOffsaveFileDir.endsWith(QString("json"))) {
-            //playOff->savePlan(playOffsaveFileDir);
-            playOff->savePlanJson(playOffsaveFileDir);
-        }
-        else {
-            playOff->savePlan(playOffsaveFileDir);
-        }
-        playOffopenFileDir = playOffsaveFileDir;
-
-        settings.setValue(DEFAULT_DIR_KEY, currentDir.absoluteFilePath(playOffopenFileDir));
-
-        //sets plan directory in window title
-        setWindowTitle("Visual Planner - "+playOffsaveFileDir);
     }
 }
 
@@ -821,51 +725,14 @@ void MainWindow::on_removeBtn_clicked()
 
 //Menu event for PlayOn
 //Shortcut is Ctrl+N
-void MainWindow::on_actionPlayOn_triggered()
-{
-    ui->menuBar->actions().at(0)->menu()->actions().at(0)->setChecked(true);
-    ui->menuBar->actions().at(0)->menu()->actions().at(1)->setChecked(false);
-    currentVPMode = PlayOn;
-    playOn->enableSQL();
-    playOff->disableSQL();
-    initVPMode();
-    ui->newBtn->setVisible(true);
-    playOn->enable();
+void MainWindow::on_actionPlayOn_triggered() {
+    init_mode(PlayOn);
 }
 
 //Menu event for PlayOff
 //Shortcut is Ctrl+M
-void MainWindow::on_actionPlayOff_triggered()
-{
-    ui->menuBar->actions().at(0)->menu()->actions().at(0)->setChecked(false);
-    ui->menuBar->actions().at(0)->menu()->actions().at(1)->setChecked(true);
-    currentVPMode = PlayOff;
-    playOn->disableSQL();
-    playOff->enableSQL();
-    initVPMode();
-    ui->newBtn->setVisible(true);
-    playOn->disable();
-    if (playOffSpinInit) {
-        ui->spinBox->setMaximum(0);
-        playOffSpinInit = false;
-    }
-}
-
-//Initilize Visual Planner modes
-void MainWindow::initVPMode()
-{
-    if (currentVPMode == PlayOn) {
-        ui->tabWidget->setVisible(true);
-        ui->ballLabel->setVisible(true);
-        ui->POtabWidget->setVisible(false);
-        playOn->initPainting();
-    }
-    else if (currentVPMode == PlayOff) {
-        ui->tabWidget->setVisible(false);
-        ui->ballLabel->setVisible(false);
-        ui->POtabWidget->setVisible(true);
-        playOff->draw();
-    }
+void MainWindow::on_actionPlayOff_triggered() {
+    init_mode(PlayOff);
 }
 
 void MainWindow::on_comboBox_2_currentIndexChanged(int index)
@@ -963,6 +830,77 @@ void MainWindow::playOffCreateActions()
     afterlifePosition = new QAction(tr("&Position"), this);
     afterlifePosition -> setStatusTip("Position");
     connect(afterlifePosition, SIGNAL(triggered()), this, SLOT(afterlifeActionPosition()));
+}
+
+void MainWindow::init_mode(MainWindow::VPMode _mode)
+{
+    bool mode = _mode == PlayOn;
+    currentVPMode = _mode;
+    ui->menuBar->actions().at(0)->menu()->actions().at(0)->setChecked(mode);
+    ui->menuBar->actions().at(0)->menu()->actions().at(1)->setChecked(!mode);
+    ui->tabWidget->setVisible(mode);
+    ui->ballLabel->setVisible(mode);
+    ui->POtabWidget->setVisible(!mode);
+
+    if (mode) {
+        playOn->enableSQL();
+        playOn->enable();
+        playOff->disableSQL();
+        playOn->initPainting();
+
+    } else {
+        playOn->disableSQL();
+        playOn->disable();
+        playOff->enableSQL();
+        if (playOffSpinInit) {
+            ui->spinBox->setMaximum(0);
+            playOffSpinInit = false;
+        }
+        playOff->draw();
+
+    }
+    ui->newBtn->setVisible(true);
+
+}
+
+QString MainWindow::save_plan(const QString &_dir) {
+    QDir currentDir;
+    QSettings settings(settingAddress, QSettings::IniFormat);
+    int reply;
+    if(_dir.length() < 2)
+    {
+        reply = QMessageBox::question(this, "Save File", "Do you want to save?",
+                                      QMessageBox::Yes|QMessageBox::Cancel);
+        if (reply == QMessageBox::Cancel)
+            return QString("NULL");
+    }
+    else
+    {
+        reply = QMessageBox::question(this, "Save File", "Do you want to save?",
+                                      QMessageBox::Save|QMessageBox::Yes|QMessageBox::Cancel);
+        if (reply == QMessageBox::Cancel)
+            return  QString("NULL");
+    }
+
+    if(reply == QMessageBox::Yes)
+    {
+        //removes the plan file with same name
+        QFile::remove(_dir);
+    }
+    if(playOnOpenFileDir.length() < 2 || reply == QMessageBox::Save)
+    {
+        QString tempDir;
+        tempDir = QFileDialog::getSaveFileName(this, tr("Save plan file"),
+                                               settings.value(DEFAULT_DIR_KEY).toString(),
+                                               tr("SQL Files (*.db3 *.db);;All Files (*.*)"));
+        if(tempDir.length() > 2)
+            return tempDir;
+        else
+            return  QString("NULL");
+    } else {
+        return _dir;
+    }
+    settings.setValue(DEFAULT_DIR_KEY, currentDir.absoluteFilePath(_dir));
 }
 
 //PlayOff contex menu slots
