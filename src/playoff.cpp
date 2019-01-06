@@ -1688,118 +1688,27 @@ void playoff::drawKickSkill(QPainter &_painter, int _stateIndex) {
 
 POInitPos playoff::getInitPos()
 {
+    // WE ASSUME that all the plans have a pass from agent 0
     POInitPos tempInitPos;
-    PlayOffSkills tempSkill;
     tempInitPos.ballX = tempInitPos.ballY = -100;
-    for (int i = 0; i < _MAX_ROBOT_COUNT; i++) {
-        tempInitPos.AgentX[i] = tempInitPos.AgentY[i] = -100;
-    }
-    TimeAndIndex temp[_MAX_ROBOT_COUNT];
-    for(auto& t : temp) {
-        t.index = -1;
-        t.agent = -1;
-        t.time = 0;
-    }
-    bool flag = false;
-    bool flagHasPass = false;
-
-    for (int i = 0; i < _MAX_ROBOT_COUNT; i++) {
-        for (int j = 0; j < robots[i].length(); j++) {
-            for (int k = 0; k < robots[i].at(j).skillSize; k++) {
-                if (robots[i].at(j).skill[k] == PassSkill) {
-                    flagHasPass = true;
-                    break;
-                }
+    for (int i = 0; i < robots[0].count(); i++) {
+        for (int j = 0; j < PlayOffRobot::SKILL_COUNT; j++) {
+            if (robots[0].at(i).skill[j] == PassSkill) {
+                tempInitPos.ballX = robots[0].at(i).x;
+                tempInitPos.ballY = robots[0].at(i).y;
             }
         }
     }
 
-    if (flagHasPass) {
-        for (int i = 0; i < _MAX_ROBOT_COUNT; i++) {
-            flag = false;
-            tempSkill = NoSkill;
-            for (int j = 0; j < robots[i].length(); j++) {
-                for (int k = 0; k < robots[i].at(j).skillSize; k++) {
-                    if (robots[i].at(j).skill[k] == PassSkill) {
-                        flag = true;
-                        tempSkill = robots[i].at(j).skill[k];
-                        break;
-                    }
-                    else {
-                        if (robots[i].at(j).skill[k] == MoveSkill) {
-                            temp[i].time += robots[i].at(j).skillData[k][0];
-                            temp[i].time += robots[i].at(j).skillData[k][1];
-                        }
-                    }
-                }
-                if(flag) {
-                    temp[i].index = j;
-                    temp[i].agent = i;
-                    break;
-                }
-            }
-        }
-    } else {
-        for (int i = 0; i < _MAX_ROBOT_COUNT; i++) {
-            flag = false;
-            tempSkill = NoSkill;
-            for (int j = 0; j < robots[i].length(); j++) {
-                for (int k = 0; k < robots[i].at(j).skillSize; k++) {
-                    if(robots[i].at(j).skill[k] == PassSkill ||
-                       robots[i].at(j).skill[k] == ShotToGoalSkill ||
-                       robots[i].at(j).skill[k] == ChipToGoalSkill)
-                    {
-                        flag = true;
-                        tempSkill = robots[i].at(j).skill[k];
-                        break;
-                    }
-                    else {
-                        temp[i].time += robots[i].at(j).skillData[k][0];
-                        temp[i].time += robots[i].at(j).skillData[k][1];
-                    }
-                }
-                if(flag) {
-                    temp[i].index = j;
-                    temp[i].agent = i;
-                    break;
-                }
-            }
-        }
-    }
-    TimeAndIndex tempTaI;
-    for (int i = 0; i < _MAX_ROBOT_COUNT; i++) {
-        for (int j = i; j < _MAX_ROBOT_COUNT; j++) {
-            if (temp[i].time > temp[j].time) {
-                tempTaI = temp[j];
-                temp[j] = temp[i];
-                temp[i] = tempTaI;
-            }
-        }
-    }
-    int selectedIndex = -1;
-    for (int i = 0; i < _MAX_ROBOT_COUNT; i++) {
-        if (temp[i].agent != -1) {
-            selectedIndex = i;
-            break;
-        }
-    }
-    if (selectedIndex != -1) {
-        if (temp[selectedIndex].agent != -1) {
-            tempInitPos.ballX = robots[temp[selectedIndex].agent].at(temp[selectedIndex].index).x;
-            tempInitPos.ballY = robots[temp[selectedIndex].agent].at(temp[selectedIndex].index).y;
-        }
-    }
     for (int i = 0; i < agentSize; i++) {
-        if (selectedIndex != -1) {
-            if (temp[selectedIndex].agent == i) {
-                continue;
-            }
-        }
         if (robots[i].count() > 0) {
             tempInitPos.AgentX[i] = robots[i].at(0).x;
             tempInitPos.AgentY[i] = robots[i].at(0).y;
         }
     }
+    tempInitPos.AgentX[0] = -100;
+    tempInitPos.AgentY[0] = -100;
+
     return tempInitPos;
 }
 

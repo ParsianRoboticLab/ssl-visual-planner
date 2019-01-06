@@ -106,6 +106,7 @@ struct RobotAttr {
 };
 
 struct PlayOffRobot {
+    static const int SKILL_COUNT = 3;
     int x, y;
     QString label;
     int agent;
@@ -114,10 +115,10 @@ struct PlayOffRobot {
     int tolerance;
     bool temp;
     RobotAttr target;
-    PlayOffSkills skill[3];
-    int skillData[3][2];
+    PlayOffSkills skill[SKILL_COUNT];
+    int skillData[SKILL_COUNT][2];
     int skillSize;
-    bool IAMode[3];
+    bool IAMode[SKILL_COUNT];
 };
 
 struct RobotGeometry {

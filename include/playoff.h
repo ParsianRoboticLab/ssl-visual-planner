@@ -221,8 +221,6 @@ private:
     Vector2D convertPos(Vector2I _input) const;
     Vector2I convertPosInverse(Vector2D _input) const;
 
-    //playOffPlanSQL *myPlan;      we added this comment
-
     //copy & paste
     void POCopy(int filter);
     void POPaste();
